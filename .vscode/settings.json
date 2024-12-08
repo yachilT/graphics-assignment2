@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "ray.h": "c",
+        "shapes.h": "c",
+        "glm.hpp": "c"
+    }
+}
