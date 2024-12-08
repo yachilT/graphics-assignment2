@@ -4,7 +4,7 @@
 
 class Shape{
 public:
-    virtual bool CheckIntersection(const Ray& ray) = 0;
+    virtual Ray* CheckIntersection(const Ray& ray) = 0;
 };
 
 class Sphere: public Shape {
@@ -23,7 +23,7 @@ class Plane: public Shape{
         ~Plane();
         Ray* CheckIntersection(const Ray& ray) override;
     protected:
-        glm::vec3 normal;
+        glm::vec3* normal;
         float d;
 };
 
