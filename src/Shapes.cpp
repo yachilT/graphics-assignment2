@@ -13,9 +13,9 @@ Sphere::~Sphere(){
     delete(this->center);
 }
 
-bool Sphere::CheckIntersection(Ray ray){
+Ray* Sphere::CheckIntersection(const Ray& ray){
     float a = glm::dot(ray.dir, ray.dir);
-    float b = 2 * ray.dir * (ray.pos - this->center);
+    float b = 2.0f * ray.dir * (ray.dir - this->center);
     float c = ray.pos - this->center - this->r * this->r;
 
     float delta = (b * b - 4 * a * c);
@@ -37,6 +37,6 @@ Plane::~Plane(){
     delete(this->normal);
 }
 
-bool Plane::CheckIntersection(Ray ray){
+bool Plane::CheckIntersection(const Ray& ray){
 
 }
