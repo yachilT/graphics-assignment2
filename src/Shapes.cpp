@@ -12,8 +12,8 @@ Sphere::~Sphere(){ }
 */
 Ray* Sphere::CheckIntersection(const Ray& ray){
     float a = 1;
-    float b = glm::dot(2.0f * *ray.dir, *ray.pos - this->center);
-    float c = glm::dot(*ray.pos - this->center, *ray.pos - this->center) - this->r * this->r;
+    float b = glm::dot(2.0f * ray.dir, ray.pos - this->center);
+    float c = glm::dot(ray.pos - this->center, ray.pos - this->center) - this->r * this->r;
 
     float delta = (b * b - 4 * a * c);
     if(delta < 0) return NULL;
@@ -26,7 +26,7 @@ Ray* Sphere::CheckIntersection(const Ray& ray){
     else if(tPos != 0 && tNeg == 0) t = tPos;
     else t = glm::min(tPos, tNeg);
 
-    glm::vec3 intersectionPoint = *ray.pos + t * *ray.dir;
+    glm::vec3 intersectionPoint = ray.pos + t * ray.dir;
 
     return new Ray(intersectionPoint, glm::normalize(intersectionPoint - this->center));
 }
@@ -37,8 +37,8 @@ Plane::Plane(float a, float b, float c, float d, float ks, float kd) : Shape(ks,
 Plane::~Plane(){ }
 
 Ray* Plane::CheckIntersection(const Ray& ray){
-    float t = glm::dot(this->normal, (glm::vec3(0.0f,0.0f,-this->normal.z/this->d) - *ray.pos) / glm::dot(this->normal, *ray.dir));
+    float t = glm::dot(this->normal, (glm::vec3(0.0f,0.0f,-this->normal.z/this->d) - ray.pos) / glm::dot(this->normal, ray.dir));
     if(t <= 0) return NULL;
 
-    return new Ray(*ray.pos, t * *ray.dir);
+    return new Ray(ray.pos, t * ray.dir);
 }
