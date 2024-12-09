@@ -3,13 +3,8 @@
 
 
 //Sphere
-Sphere::Sphere(float x, float y, float z, float r) : r(r){
-    this->center = glm::vec3(x, y, z);
-}
-
-Sphere::~Sphere(){
-    
-}
+Sphere::Sphere(float x, float y, float z, float r, float ks, float kd) : Shape(ks, kd), r(r), center(glm::vec3(x, y, z)){ }
+Sphere::~Sphere(){ }
 
 /*
 @param ray The ray to check if it intersetcs with current object
@@ -38,13 +33,8 @@ Ray* Sphere::CheckIntersection(const Ray& ray){
 
 
 //plane
-Plane::Plane(float a, float b, float c, float d) : d(d){
-    this->normal = glm::vec3(a, b ,c);
-}
-
-Plane::~Plane(){
-    
-}
+Plane::Plane(float a, float b, float c, float d, float ks, float kd) : Shape(ks, kd), d(d), normal(glm::vec3(a, b ,c)){ }
+Plane::~Plane(){ }
 
 Ray* Plane::CheckIntersection(const Ray& ray){
     float t = glm::dot(this->normal, (glm::vec3(0.0f,0.0f,-this->normal.z/this->d) - *ray.pos) / glm::dot(this->normal, *ray.dir));
