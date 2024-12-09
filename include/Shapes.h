@@ -13,9 +13,9 @@ class Sphere: public Shape {
         ~Sphere();
         Ray* CheckIntersection(const Ray& ray) override;
     protected:
-        glm::vec3* center;
+        glm::vec3 center;
         float r;
-}
+};
 
 class Plane: public Shape{
     public:
@@ -23,7 +23,7 @@ class Plane: public Shape{
         ~Plane();
         Ray* CheckIntersection(const Ray& ray) override;
     protected:
-        glm::vec3* normal;
+        glm::vec3 normal;
         float d;
 };
 
