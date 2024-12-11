@@ -4,6 +4,7 @@
         "ray.h": "c",
         "shapes.h": "c",
         "glm.hpp": "c",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "vector": "cpp"
     }
 }
