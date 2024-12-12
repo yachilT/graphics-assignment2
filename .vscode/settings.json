@@ -5,6 +5,7 @@
         "shapes.h": "c",
         "glm.hpp": "c",
         "cmath": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "deque": "cpp"
     }
 }

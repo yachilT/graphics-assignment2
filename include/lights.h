@@ -5,39 +5,37 @@
 //TODO: consider specular and diffuse according to formula.
 class Light {
    public:
-      Light(glm::vec3 intensity, float specularExp);
+      Light(glm::vec3 intensity);
       virtual glm::vec3 diffuse(const Ray &normal) = 0;
-      virtual glm::vec3 specular(const Ray &normal, const glm::vec3 &viewDir) = 0;
+      virtual glm::vec3 specular(const Ray &normal, const glm::vec3 &viewDir, float specularExp) = 0;
       
    protected:
       glm::vec3 intensity;
-      float specularExp;
-      
 };
 
 class Ambient {
    public:
-      Ambient(glm::vec3 intensity, glm::vec3 k_ambient);
+      Ambient();
+      Ambient(glm::vec3 intensity);
       glm::vec3 getIntensity(const Ray &r);
    private:
       glm::vec3 intensity;
-      glm::vec3 k_ambient;
 };
 
 class Directional: public Light {
    public:
-      Directional(glm::vec3 intensity, float specular_exp, glm::vec3 dir);
+      Directional(glm::vec3 intensity, glm::vec3 dir);
       glm::vec3 diffuse(const Ray &normal) override;
-      glm::vec3 specular(const Ray &normal, const glm::vec3 &viewDir) override;
+      glm::vec3 specular(const Ray &normal, const glm::vec3 &viewDir, float specularExp) override;
    protected:
       glm::vec3 dir;
 };
 
 class Spotlight: public Directional {
    public:
-      Spotlight(glm::vec3 intensity, float specular_exp, glm::vec3 dir, glm::vec3 pos, float cutoffCos);
+      Spotlight(glm::vec3 intensity, glm::vec3 dir, glm::vec3 pos, float cutoffCos);
       glm::vec3 diffuse(const Ray &normal) override;
-      glm::vec3 specular(const Ray &normal, const glm::vec3 &viewDir) override;
+      glm::vec3 specular(const Ray &normal, const glm::vec3 &viewDir, float specularExp) override;
    private:
       glm::vec3 pos;
       float cutoffCos;

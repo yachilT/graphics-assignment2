@@ -13,6 +13,7 @@ Reader::Reader(const string &path) : lines()
     this->loadLines(path);
 }
 
+//TODO!: USE SSCANF
 ReaderLine Reader::proccesLine(const string &l)
 {
     vector<string> tokens;
@@ -58,4 +59,8 @@ void Reader::loadLines(const string &path)
     while (getline(file, line)) {
         lines.push_back(proccesLine(line));
     }
+}
+
+vector<ReaderLine> Reader::getLines() const{
+    return this->lines;
 }

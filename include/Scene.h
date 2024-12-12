@@ -3,20 +3,28 @@
 #include <lights.h>
 #include <reader.h>
 #include <vector>
+#include <deque>
 #include <glm/glm.hpp>
 
 using glm::vec3;
 using std::vector;
+using std::deque;
 
 class Camera {
     private:
         vec3 pos;
-        vec3 dirFront;
-        vec3 dirRight;
+        vec3 forward;
+        vec3 up;
+        vec3 right;
     
     public:
-        Camera(vec3 pos, vec3 dirFront, vec3 dirRight);
+        Camera(vec3 pos, vec3 dirFront, vec3 dirUp);
         Camera(vec3 pos);
+        Camera();
+
+        vec3 getForward() const;
+        vec3 getUp() const;
+        vec3 getRight() const;
 };
 
 class Scene {
@@ -24,8 +32,8 @@ class Scene {
         Camera cam;
         vector<Shape> objects;
         vector<Light> lights;
+        Ambient ambient;
     public:
-        Scene(Reader &reader);
-
+        Scene(const Reader &reader);
 
 };

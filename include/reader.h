@@ -1,12 +1,13 @@
 #pragma once
 #include <Shapes.h>
 #include <string>
+
 using namespace std;
 
 struct ReaderLine
 {
     char c;
-    float fs[3];
+    float fs[4];
     
 };
 
@@ -14,8 +15,11 @@ struct ReaderLine
 class Reader {
     private:
         vector<ReaderLine> lines;
+        ReaderLine nextLine;
         void loadLines(const string &path);
         ReaderLine proccesLine(const string &l);
     public:
         Reader(const string &path);
+        vector<ReaderLine> getLines() const;
+        
 };
