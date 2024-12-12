@@ -25,6 +25,7 @@ class Camera {
         vec3 getForward() const;
         vec3 getUp() const;
         vec3 getRight() const;
+        vec3 getPos() const;
 };
 
 class Scene {
