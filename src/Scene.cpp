@@ -21,6 +21,11 @@ Scene::Scene(const Reader &reader){
     deque<float> light_type; //true - directional
     float currType;
 
+    deque<char> obj_type;
+    deque<vec3> obj_pos;
+    deque<float> obj_forth;
+    float currForth;
+
     vector<ReaderLine> lines = reader.getLines();
     ReaderLine currLine;
     
@@ -51,14 +56,39 @@ Scene::Scene(const Reader &reader){
                 light_type.pop_front();
 
                 if(currType == DIRECTIONAL_LIGHT){
-                    this->lights.push_back(Directional(directional_directions.at(0), vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2])));
+                    this->lights.push_back(Directional(vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), directional_directions.at(0)));
                     directional_directions.pop_front();
                 }
                 else if(currType == SPOTLIGHT_LIGHT){
-                    this->lights.push_back(Spotlight(vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), directional_directions.at(0), spotlight_pos.at(0), currLine.fs[3]));
+                    this->lights.push_back(Spotlight(vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), spotlight_directions.at(0), spotlight_pos.at(0), currLine.fs[3]));
                     spotlight_directions.pop_front();
                     spotlight_pos.pop_front();
                 }
+            break;
+            case 'o':
+                obj_pos.push_back(vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]));
+                obj_forth.push_back(currLine.fs[3]);
+                obj_type.push_back('o');
+            break;
+            case 'r':
+                obj_pos.push_back(vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]));
+                obj_forth.push_back(currLine.fs[3]);
+                obj_type.push_back('r');
+            break;
+            case 't':
+                obj_pos.push_back(vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]));
+                obj_forth.push_back(currLine.fs[3]);
+                obj_type.push_back('t');
+            break;
+            case 'c':
+                currForth = obj_forth.at(0);
+                obj_forth.pop_front();
+
+                if(currForth > 0) this->objects.push_back(Sphere(obj_pos.at(0), currForth, vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), obj_type.at(0), currLine.fs[3]));
+                else this->objects.push_back(Plane(obj_pos.at(0), currForth, vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), obj_type.at(0), currLine.fs[3]));
+                
+                obj_pos.pop_front();
+                obj_type.pop_front();
             break;
         }
     }
