@@ -16,4 +16,5 @@ class Screen {
         Screen(const int &width, const int &height);
         vector<Ray> constructRay(const Camera &cam, const int &row, const int &col);
         void setColor(const int &row, const int &col ,vec3 color);
+        unsigned char * getImageBuffer();
 };

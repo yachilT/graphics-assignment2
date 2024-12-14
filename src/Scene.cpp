@@ -13,6 +13,8 @@ vec3 Camera::getForward() const { return this->forward; }
 vec3 Camera::getUp() const { return this->up; }
 vec3 Camera::getRight() const { return this->right; }
 
+vec3 Camera::getPos() const { return this->pos; }
+
 //TODO!: FINISSH
 Scene::Scene(const Reader &reader){
     deque<vec3> directional_directions;
@@ -64,3 +66,5 @@ Scene::Scene(const Reader &reader){
     }
 }
 
+Scene::Scene(Camera cam, vector<Shape> objects, vector<Light> lights, Ambient ambient) : 
+cam(cam), objects(objects), lights(lights), ambient(ambient) {};

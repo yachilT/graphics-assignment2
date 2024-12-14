@@ -59,3 +59,15 @@ void Screen::setColor(const int &row, const int &col, vec3 color)
 {
     pixels[m2a(row, col)] = color;
 }
+
+unsigned char *Screen::getImageBuffer()
+{
+    unsigned char * buffer = new unsigned char[this->pixels->length() * 3];
+    for (int i = 0; i < this->pixels->length(); i++) {
+        buffer[i] = this->pixels[i][0];
+        buffer[i + 1] = this->pixels[i][1];
+        buffer[i + 2] = this->pixels[i][2];
+    }
+
+    return buffer;
+}
