@@ -1,9 +1,13 @@
 #include <Shapes.h>
 #include <glm/glm.hpp>
 
+Shape::Shape(glm::vec3 ks, glm::vec3 kd, glm::vec3 ka, char type, float n) : k_ambient(ka), k_specular(ks), k_diffuse(kd), n(n), type(type) {};
+Shape::Shape(glm::vec3 kd, glm::vec3 ka, char type, float n) : k_ambient(ka), k_specular(glm::vec3(0.7,0.7,0.7)), k_diffuse(kd), n(n), type(type) {};
 
 //Sphere
-Sphere::Sphere(float x, float y, float z, float r, glm::vec3 ks, glm::vec3 kd, glm::vec3 ka, float n) : Shape(ks, kd, ka, n), r(r), center(glm::vec3(x, y, z)){ }
+Sphere::Sphere(float x, float y, float z, float r, glm::vec3 ks, glm::vec3 kd, glm::vec3 ka, char type, float n) : Shape(ks, kd, ka, type, n), r(r), center(glm::vec3(x, y, z)){ };
+Sphere::Sphere(float x, float y, float z, float r, glm::vec3 kd, glm::vec3 ka, char type, float n) : Shape(kd, ka, type, n), r(r), center(glm::vec3(x, y, z)){ };
+Sphere::Sphere(glm::vec3 center, float r, glm::vec3 kd, glm::vec3 ka, char type, float n) : Shape(kd, ka, type, n), r(r), center(center) {}
 Sphere::~Sphere(){ }
 
 /*
@@ -33,7 +37,9 @@ Ray* Sphere::CheckIntersection(const Ray& ray){
 
 
 //plane
-Plane::Plane(float a, float b, float c, float d, glm::vec3 ks, glm::vec3 kd, glm::vec3 ka, float n) : Shape(ks, kd, ka, n), d(d), normal(glm::vec3(a, b ,c)){ }
+Plane::Plane(float a, float b, float c, float d, glm::vec3 ks, glm::vec3 kd, glm::vec3 ka, char type, float n) : Shape(ks, kd, ka, type, n), d(d), normal(glm::vec3(a, b ,c)){ }
+Plane::Plane(float a, float b, float c, float d, glm::vec3 kd, glm::vec3 ka, char type, float n) : Shape(kd, ka, type, n), d(d), normal(glm::vec3(a, b ,c)){ }
+Plane::Plane(glm::vec3 normal, float d, glm::vec3 kd, glm::vec3 ka, char type, float n) : Shape(kd, ka, type, n), d(d), normal(normal) {}
 Plane::~Plane(){ }
 
 /*
@@ -43,6 +49,5 @@ Plane::~Plane(){ }
 Ray* Plane::CheckIntersection(const Ray& ray){
     float t = glm::dot(this->normal, (glm::vec3(0.0f,0.0f,-this->normal.z/this->d) - ray.pos) / glm::dot(this->normal, ray.dir));
     if(t <= 0) return NULL;
-
-    return new Ray(ray.pos, t * ray.dir);
+    return new Ray(ray.pos + glm::vec3(t,t,t), this->normal);
 }

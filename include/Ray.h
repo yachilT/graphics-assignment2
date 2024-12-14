@@ -3,17 +3,11 @@
 
 class Ray {
    public:
-      glm::vec3 pos;
-      glm::vec3 dir;
+      const glm::vec3 pos;
+      const glm::vec3 dir;
 
-      Ray(float x1, float y1, float z1, float x2, float y2, float z2){
-         this->pos = glm::vec3(x1, y1, z1);
-         this->dir = glm::vec3(x2, y2, z2);
-      }
+      Ray(float x1, float y1, float z1, float x2, float y2, float z2) : pos(glm::vec3(x1, y1, z1)), dir(glm::vec3(x2, y2, z2)) {};
 
-      Ray(glm::vec3& pos, glm::vec3& dir){
-         this->pos = glm::vec3(pos.x, pos.y, pos.z);
-         this->dir = glm::vec3(dir.x, dir.y, dir.z);
-      }
+      Ray(glm::vec3& pos, glm::vec3& dir) : pos(pos), dir(dir) {};
       
 };
