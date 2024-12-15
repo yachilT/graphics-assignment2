@@ -1,5 +1,6 @@
 #include <Shapes.h>
 #include <glm/glm.hpp>
+#include <iostream>
 
 Shape::Shape(glm::vec3 ks, glm::vec3 kd, glm::vec3 ka, char type, float n) : k_ambient(ka), k_specular(ks), k_diffuse(kd), n(n), type(type) {};
 Shape::Shape(glm::vec3 kd, glm::vec3 ka, char type, float n) : k_ambient(ka), k_specular(glm::vec3(0.7,0.7,0.7)), k_diffuse(kd), n(n), type(type) {};
@@ -15,12 +16,16 @@ Sphere::~Sphere(){ }
 @return Pointer to the ray representing the normal to the hitpoint if there is one, otherwise NULL
 */
 Ray* Sphere::CheckIntersection(const Ray& ray){
+
     float a = 1;
     float b = glm::dot(2.0f * ray.dir, ray.pos - this->center);
     float c = glm::dot(ray.pos - this->center, ray.pos - this->center) - this->r * this->r;
 
-    float delta = (b * b - 4 * a * c);
-    if(delta < 0) return nullptr;
+    float delta = (b * b - 4 * a * c); 
+    if(delta < 0) { 
+        //std::cout << "misses" << std::endl;
+        return nullptr;
+    }
 
     float tPos = (-b + glm::sqrt(delta))/ (2*a);
     float tNeg = delta == 0 ? tPos : (-b - glm::sqrt(delta))/ (2*a);
@@ -28,6 +33,8 @@ Ray* Sphere::CheckIntersection(const Ray& ray){
     
     if (tPos  <= 0 &&  tNeg <= 0) return nullptr;
     t = glm::min(tPos, tNeg);
+
+
 
     glm::vec3 intersectionPoint = ray.pos + t * ray.dir;
 

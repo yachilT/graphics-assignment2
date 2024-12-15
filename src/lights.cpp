@@ -36,4 +36,5 @@ glm::vec3 Spotlight::specular(const Ray &normal, const glm::vec3 &viewDir, float
 {
     if (this->insideBeam(normal.pos))
         return this->Directional::specular(normal, viewDir, specularExp);
+    return glm::vec3(0);
 };

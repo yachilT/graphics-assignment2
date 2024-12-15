@@ -28,7 +28,7 @@ vec2 Screen::pixelToWorldOffset(int row, int col)
     vec2 pixelWidth = vec2(2.0) / dims;
 
 
-    vec2 coords = -((vec2(col, row) / dims) * vec2(2) - vec2(1)) + pixelWidth / glm::vec2(2);
+    vec2 coords = ((vec2(col, row) / dims) * vec2(2) - vec2(1)) * vec2(1, -1) + pixelWidth / glm::vec2(2);
     return coords;
 };
 
