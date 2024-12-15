@@ -31,11 +31,11 @@ class Camera {
 class Scene {
     private:
         Camera cam;
-        vector<Shape> objects;
-        vector<Light> lights;
+        vector<Shape*> objects;
+        vector<Light*> lights;
         Ambient ambient;
     public:
         Scene(const Reader &reader);
-        Scene(Camera cam, vector<Shape> objects, vector<Light> lights, Ambient ambient);
+        Scene(Camera cam, vector<Shape*> objects, vector<Light*> lights, Ambient ambient);
 
 };

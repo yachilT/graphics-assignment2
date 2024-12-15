@@ -1,6 +1,8 @@
 #pragma once
 #include <Shapes.h>
 #include <string>
+#include <vector>
+using std::vector;
 
 using namespace std;
 

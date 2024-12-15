@@ -1,9 +1,9 @@
 #include "lights.h"
 
 //---------------------------------------Light---------------------------------------------
+
 Light::Light(glm::vec3 intensity) :
  intensity(intensity){};
-
 //---------------------------------------Ambient---------------------------------------------
 Ambient::Ambient(){}
 Ambient::Ambient(glm::vec3 intensity) : intensity(intensity) {};
@@ -35,5 +35,5 @@ glm::vec3 Spotlight::diffuse(const Ray &normal)
 glm::vec3 Spotlight::specular(const Ray &normal, const glm::vec3 &viewDir, float specularExp)
 {
     if (this->insideBeam(normal.pos))
-        return this->Directional::specular(normal, viewDir);
+        return this->Directional::specular(normal, viewDir, specularExp);
 };

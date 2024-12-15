@@ -6,7 +6,18 @@
 class Light {
    public:
       Light(glm::vec3 intensity);
+      /*
+      @param normal the normal vector to the hitpoint surface
+      @return RGB values of diffusion intensity
+      */
       virtual glm::vec3 diffuse(const Ray &normal) = 0;
+
+      /*
+      @param normal the normal vector to the hitpoint surface
+      @param viewDir normalized vector of direction from hit point to the camera
+      @param specularExp specular exponent that controls the size of specular light
+      @return RGB values of specular intensity
+      */
       virtual glm::vec3 specular(const Ray &normal, const glm::vec3 &viewDir, float specularExp) = 0;
       
    protected:

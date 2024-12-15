@@ -58,11 +58,11 @@ Scene::Scene(const Reader &reader){
                 light_type.pop_front();
 
                 if(currType == DIRECTIONAL_LIGHT){
-                    this->lights.push_back(Directional(vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), directional_directions.at(0)));
+                    this->lights.push_back(new Directional(vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), directional_directions.at(0)));
                     directional_directions.pop_front();
                 }
                 else if(currType == SPOTLIGHT_LIGHT){
-                    this->lights.push_back(Spotlight(vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), spotlight_directions.at(0), spotlight_pos.at(0), currLine.fs[3]));
+                    this->lights.push_back(new Spotlight(vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), spotlight_directions.at(0), spotlight_pos.at(0), currLine.fs[3]));
                     spotlight_directions.pop_front();
                     spotlight_pos.pop_front();
                 }
@@ -86,8 +86,8 @@ Scene::Scene(const Reader &reader){
                 currForth = obj_forth.at(0);
                 obj_forth.pop_front();
 
-                if(currForth > 0) this->objects.push_back(Sphere(obj_pos.at(0), currForth, vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), obj_type.at(0), currLine.fs[3]));
-                else this->objects.push_back(Plane(obj_pos.at(0), currForth, vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), obj_type.at(0), currLine.fs[3]));
+                if(currForth > 0) this->objects.push_back(new Sphere(obj_pos.at(0), currForth, vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), obj_type.at(0), currLine.fs[3]));
+                else this->objects.push_back(new Plane(obj_pos.at(0), currForth, vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), obj_type.at(0), currLine.fs[3]));
                 
                 obj_pos.pop_front();
                 obj_type.pop_front();
@@ -96,5 +96,5 @@ Scene::Scene(const Reader &reader){
     }
 }
 
-Scene::Scene(Camera cam, vector<Shape> objects, vector<Light> lights, Ambient ambient) : 
+Scene::Scene(Camera cam, vector<Shape*> objects, vector<Light*> lights, Ambient ambient) : 
 cam(cam), objects(objects), lights(lights), ambient(ambient) {};

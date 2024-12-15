@@ -7,5 +7,13 @@
         "cmath": "cpp",
         "vector": "cpp",
         "deque": "cpp"
-    }
+    },
+    "makefile.makefilePath": "C:\\Users\\tomyl\\Documents\\software_engineering\\semester_5\\Graphics\\Assignment2\\Makefile",
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "c:\\Users\\tomyl\\Documents\\software_engineering\\semester_5\\Graphics\\Assignment2\\bin",
+            "binaryPath": "c:\\Users\\tomyl\\Documents\\software_engineering\\semester_5\\Graphics\\Assignment2\\bin\\main",
+            "binaryArgs": []
+        }
+    ]
 }

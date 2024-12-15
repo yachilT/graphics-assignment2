@@ -1,3 +1,4 @@
+#include <iostream>
 #include "screen.h"
 #define NUM_RAYS_AS 4
 #define RAYS_CIRCLE_RADIUS 0.5f // interpolates between 0 and 1
@@ -14,6 +15,7 @@ Screen::Screen(const int &width, const int &height) : width(width), height(heigh
     for (int i = 0; i < width * height; i++) {
         pixels[i] = vec3(0);
     }
+
 }
 
 int Screen::m2a(int row, int col)
@@ -57,16 +59,20 @@ vector<Ray> Screen::constructRay(const Camera &cam, const int &row, const int &c
 
 void Screen::setColor(const int &row, const int &col, vec3 color)
 {
+    //std::cout << "setting " << row << ", " << col << " in " << row * width + col << "   " << color[0] << "," << color[1] << ", " << color[2] << std::endl;
     pixels[m2a(row, col)] = color;
 }
 
 unsigned char *Screen::getImageBuffer()
 {
-    unsigned char * buffer = new unsigned char[this->pixels->length() * 3];
-    for (int i = 0; i < this->pixels->length(); i++) {
-        buffer[i] = this->pixels[i][0];
-        buffer[i + 1] = this->pixels[i][1];
-        buffer[i + 2] = this->pixels[i][2];
+    unsigned char * buffer = new unsigned char[width * height * 3];
+    for (int i = 0; i < width * height; i++) {
+        //std::cout << "b[" << 3*i << "] = " << this->pixels[i][0] * 255 << std::endl;
+        buffer[3 * i] = this->pixels[i][0] * 255;
+        //std::cout << "b[" << 3*i + 1 << "] = " << this->pixels[i][1] * 255 << std::endl;
+        buffer[3 * i + 1] = this->pixels[i][1] * 255;
+        //std::cout << "b[" << 3*i + 2 << "] = " << this->pixels[i][2] * 255 << std::endl;
+        buffer[3 * i + 2] = this->pixels[i][2] * 255;
     }
 
     return buffer;

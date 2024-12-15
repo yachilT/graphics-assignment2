@@ -20,15 +20,14 @@ Ray* Sphere::CheckIntersection(const Ray& ray){
     float c = glm::dot(ray.pos - this->center, ray.pos - this->center) - this->r * this->r;
 
     float delta = (b * b - 4 * a * c);
-    if(delta < 0) return NULL;
+    if(delta < 0) return nullptr;
 
     float tPos = (-b + glm::sqrt(delta))/ (2*a);
     float tNeg = delta == 0 ? tPos : (-b - glm::sqrt(delta))/ (2*a);
     float t = 0;
     
-    if(tPos == 0 && tNeg != 0) t = tNeg;
-    else if(tPos != 0 && tNeg == 0) t = tPos;
-    else t = glm::min(tPos, tNeg);
+    if (tPos  <= 0 &&  tNeg <= 0) return nullptr;
+    t = glm::min(tPos, tNeg);
 
     glm::vec3 intersectionPoint = ray.pos + t * ray.dir;
 
