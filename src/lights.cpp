@@ -1,4 +1,5 @@
 #include "lights.h"
+#include <iostream>
 
 //---------------------------------------Light---------------------------------------------
 
@@ -10,9 +11,11 @@ Ambient::Ambient(glm::vec3 intensity) : intensity(intensity) {};
 glm::vec3 Ambient::getIntensity(const Ray &r) { return intensity; };
 
 //---------------------------------------Directional---------------------------------------------
-Directional::Directional(glm::vec3 intensity, glm::vec3 dir) : Light(intensity), dir(dir) {};
+Directional::Directional(glm::vec3 intensity, glm::vec3 dir) : Light(intensity), dir(glm::normalize(dir)) {
+};
 glm::vec3 Directional::diffuse(const Ray &normal) {
-    return this->intensity * glm::dot(normal.dir, this->dir);
+    glm::vec3 dirToLight = - this->dir;
+    return this->intensity * glm::max(.0f, glm::dot(normal.dir, -this->dir));
 };
 glm::vec3 Directional::specular(const Ray &normal, const glm::vec3 &viewDir, float specularExp) {
     glm::vec3 reflective = this->dir - 2 * glm::dot(this->dir, normal.dir); //scary..
