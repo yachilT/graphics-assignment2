@@ -32,6 +32,9 @@ Ray* Sphere::CheckIntersection(const Ray& ray){
     float t = 0;
     
     if (tPos  <= 0 &&  tNeg <= 0) return nullptr;
+    if (tPos == 0) t = tNeg;
+    if (tNeg == 0) t = tPos;
+
     t = glm::min(tPos, tNeg);
 
 

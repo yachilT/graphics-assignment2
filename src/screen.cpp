@@ -35,7 +35,9 @@ vec2 Screen::pixelToWorldOffset(int row, int col)
 vector<Ray> Screen::constructRay(const Camera &cam, const int &row, const int &col)
 {
     vec2 offset = pixelToWorldOffset(row, col);
+    //std::cout << "offest: " << offset[0] << "," << offset[1] << std::endl;
     vec3 pixelCenter = screenCenter + cam.getRight() * offset[0] + cam.getUp() * offset[1];
+    //std::cout << pixelCenter[0] << "," << pixelCenter[1] << "," << pixelCenter[2] << std::endl;
     vec3 dir = pixelCenter - cam.getPos();
     vector<Ray> rays;
     rays.push_back(Ray(cam.getPos(), dir));

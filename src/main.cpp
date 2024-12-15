@@ -16,8 +16,8 @@
 
 int main(int argc, char** argv)
 {
-    int width = 100;
-    int height = 100;
+    int width = 1000;
+    int height = 1000;
 
     Screen s(width, height);
 
@@ -28,12 +28,11 @@ int main(int argc, char** argv)
     for (int row = 0; row < height; row++) {
         for (int col = 0; col < width; col++){
             vector<Ray> rs = s.constructRay(cam, row, col);
-            cout << rs.at(0).pos[0] << "," << rs.at(0).pos[1] << "," << rs.at(0).pos[2] << endl;
-            // Ray *normal = c.CheckIntersection(rs.at(0));
-            // if(normal != nullptr) {
-            //     cout << normal->pos[0] << "," << normal->pos[1] << "," << normal->pos[2] << endl;
-            //     s.setColor(row, col, blue);
-            // }
+            Ray *normal = c.CheckIntersection(rs.at(0));
+            if(normal != nullptr) {
+                cout << normal->pos[0] << "," << normal->pos[1] << "," << normal->pos[2] << endl;
+                s.setColor(row, col, blue);
+            }
         }
     }
 
