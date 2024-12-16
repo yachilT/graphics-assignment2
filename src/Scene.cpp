@@ -16,7 +16,6 @@ vec3 Camera::getRight() const { return this->right; }
 
 vec3 Camera::getPos() const { return this->pos; }
 
-//TODO!: FINISSH
 Scene::Scene(const Reader &reader){
     deque<vec3> directional_directions;
     deque<vec3> spotlight_directions;
