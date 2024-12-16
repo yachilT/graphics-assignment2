@@ -1,9 +1,10 @@
 #include "Scene.h"
 #define DIRECTIONAL_LIGHT 0
 #define SPOTLIGHT_LIGHT 1
+#include <iostream>
 
 Camera::Camera(vec3 pos, vec3 forward, vec3 up) :
-pos(pos), forward(forward), up(up), right(glm::dot(up, forward)) {};
+pos(pos), forward(forward), up(up), right(glm::cross(up, forward)) {};
 
 Camera::Camera(vec3 pos) : Camera::Camera(pos, vec3(0) - pos, vec3(0, 1, 0)) {};
 

@@ -7,6 +7,7 @@ public:
     virtual Ray* CheckIntersection(const Ray& ray) = 0;
     glm::vec3 getKS(){ return k_specular; }
     glm::vec3 getKD(){ return k_diffuse; }
+    glm::vec3 getKA() {return k_ambient; }
 protected:
     glm::vec3 k_diffuse;
     glm::vec3 k_specular;

@@ -14,6 +14,8 @@ class Screen {
         static vec3 screenCenter;
     public:
         Screen(const int &width, const int &height);
+        const static int raysPerPixel = 5;
+        constexpr static float raysCircleRadius = 1;
         vector<Ray> constructRay(const Camera &cam, const int &row, const int &col);
         void setColor(const int &row, const int &col ,vec3 color);
         unsigned char * getImageBuffer();
