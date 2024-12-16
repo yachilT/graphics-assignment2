@@ -21,7 +21,7 @@ class Sphere: public Shape {
     public:
         Sphere(float x, float y, float z, float r, glm::vec3 ks, glm::vec3 kd, glm::vec3 ka, char type, float n);
         Sphere(float x, float y, float z, float r, glm::vec3 kd, glm::vec3 ka, char type, float n);
-        Sphere(glm::vec3 pos, float r, glm::vec3 kd, glm::vec3 ka, char type, float n);
+        Sphere(glm::vec3 center, float r, glm::vec3 kd, glm::vec3 ka, char type, float n);
         ~Sphere();
         Ray* CheckIntersection(const Ray& ray) override;
     protected:
