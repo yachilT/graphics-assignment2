@@ -18,6 +18,27 @@ int main(int argc, char** argv)
 {
     int width = 1000;
     int height = 1000;
+
+    Screen screen(width, height);
+    string path = "";
+    Reader r(path);
+    Scene scene(r);
+
+
+    for (int row = 0; row < height; row++) {
+        for (int col = 0; col < width; col++) {
+            vector<Ray> rs = screen.constructRay(scene.getCamera(), row, col);
+            scene.
+        }
+    }
+
+    
+    return 0;
+}
+
+int test() {
+    int width = 1000;
+    int height = 1000;
     Screen s(width, height);
 
     vec3 blue(0, 0, 1);
@@ -56,6 +77,5 @@ int main(int argc, char** argv)
         
     unsigned char * b = s.getImageBuffer();
     stbi_write_png("test.png", width, height, 3, b, width * 3);
-    
-    return 0;
 }
+ 

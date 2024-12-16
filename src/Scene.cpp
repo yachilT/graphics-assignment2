@@ -99,3 +99,7 @@ Scene::Scene(const Reader &reader){
 
 Scene::Scene(Camera cam, vector<Shape*> objects, vector<Light*> lights, Ambient ambient) : 
 cam(cam), objects(objects), lights(lights), ambient(ambient) {};
+const Camera& Scene::getCamera()
+{
+    return this->cam;
+};

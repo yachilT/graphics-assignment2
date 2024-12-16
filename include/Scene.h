@@ -37,5 +37,7 @@ class Scene {
     public:
         Scene(const Reader &reader);
         Scene(Camera cam, vector<Shape*> objects, vector<Light*> lights, Ambient ambient);
+        const Camera& getCamera();
+        Scene
 
 };
