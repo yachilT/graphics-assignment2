@@ -23,12 +23,25 @@ int main(int argc, char** argv)
     string path = "";
     Reader r(path);
     Scene scene(r);
-
+    vec3 mainColor;
+    vec3 sideColor;
 
     for (int row = 0; row < height; row++) {
         for (int col = 0; col < width; col++) {
-            vector<Ray> rs = screen.constructRay(scene.getCamera(), row, col);
-            scene.
+            deque<Ray> rs = screen.constructRay(scene.getCamera(), row, col);
+            Intersection* intersection = scene.findIntersection(rs.at(0));
+            mainColor = scene.getColor(intersection);
+            rs.pop_front();
+            delete intersection;
+
+            if(rs.size() == 0) screen.setColor(row, col, mainColor);
+            else{
+                while(rs.size() > 0){
+                    intersection = scene.findIntersection(rs.at(0));
+                    sideColor += scene.getColor(intersection);
+                }
+                screen.setColor(row, col, mainColor + (0.5f/Screen::RAYS_PER_PIXEL)*sideColor);
+            }
         }
     }
 
@@ -66,7 +79,7 @@ int test() {
 
                     if(normal != nullptr) {
                         vec3 color = l.diffuse(*normal) * list[k].getKD()+ list[k].getKA();
-                        finalColor += (i == 0 ? .5f * color : .5f / Screen::raysPerPixel * color); 
+                        finalColor += (i == 0 ? .5f * color : .5f / Screen::RAYS_PER_PIXEL * color); 
                     }
                 }
             }

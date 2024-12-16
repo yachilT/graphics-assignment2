@@ -30,25 +30,25 @@ vec2 Screen::pixelToWorldOffset(int row, int col)
     return coords;
 };
 
-vector<Ray> Screen::constructRay(const Camera &cam, const int &row, const int &col)
+deque<Ray> Screen::constructRay(const Camera &cam, const int &row, const int &col)
 {
     vec2 offset = pixelToWorldOffset(row, col);
     //std::cout << "offest: " << offset[0] << "," << offset[1] << std::endl;
     vec3 pixelCenter = screenCenter + cam.getRight() * offset[0] + cam.getUp() * offset[1];
     //std::cout << pixelCenter[0] << "," << pixelCenter[1] << "," << pixelCenter[2] << std::endl;
     vec3 dir = pixelCenter - cam.getPos();
-    vector<Ray> rays;
+    deque<Ray> rays;
     rays.push_back(Ray(cam.getPos(), dir));
-    if (Screen::raysPerPixel > 0) {
+    if (Screen::RAYS_PER_PIXEL > 0) {
 
         vec2 pixelDims = pixelToWorldOffset(row + 1, col + 1) - offset;
         mat3 worldToCam = mat3(cam.getRight(), cam.getUp(), cam.getForward());
         mat3 pixelSizeScale = .5f * mat3(pixelDims[0], 0, 0, pixelDims[1], 0, 0, 0, 0, 0);
 
-        for (int i = 0; i < Screen::raysPerPixel; i++) {
-            float angle = 2 * PI / Screen::raysPerPixel * i;
+        for (int i = 0; i < Screen::RAYS_PER_PIXEL; i++) {
+            float angle = 2 * PI / Screen::RAYS_PER_PIXEL * i;
             vec3 rotated = glm::transpose(worldToCam) // convert back to world coords
-            * Screen::raysCircleRadius * pixelSizeScale // scale according to pixel dims
+            * Screen::RAY_CIRCLE_RADIUS * pixelSizeScale // scale according to pixel dims
             * mat3(cos(angle), sin(angle), 0,  cos(angle), -sin(angle), 0, 0, 0, 1) // rotate right vector
             *  vec3(1,0,0);
             
