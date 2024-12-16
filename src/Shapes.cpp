@@ -15,7 +15,7 @@ Sphere::~Sphere(){ }
 @param ray The ray to check if it intersetcs with current object
 @return Pointer to the ray representing the normal to the hitpoint if there is one, otherwise NULL
 */
-Ray* Sphere::CheckIntersection(const Ray& ray){
+Intersection* Sphere::CheckIntersection(const Ray& ray){
 
     float a = 1;
     float b = glm::dot(2.0f * ray.dir, ray.pos - this->center);
@@ -41,7 +41,7 @@ Ray* Sphere::CheckIntersection(const Ray& ray){
 
     glm::vec3 intersectionPoint = ray.pos + t * ray.dir;
 
-    return new Ray(intersectionPoint, glm::normalize(intersectionPoint - this->center));
+    return new Intersection(this, Ray(intersectionPoint, glm::normalize(intersectionPoint - this->center)), t);
 }
 
 
@@ -55,8 +55,8 @@ Plane::~Plane(){ }
 @param ray The ray to check if it intersetcs with current object
 @return Pointer to the ray representing the normal to the hitpoint if there is one, otherwise NULL
 */
-Ray* Plane::CheckIntersection(const Ray& ray){
+Intersection* Plane::CheckIntersection(const Ray& ray){
     float t = glm::dot(this->normal, (glm::vec3(0.0f,0.0f,-this->normal.z/this->d) - ray.pos) / glm::dot(this->normal, ray.dir));
     if(t <= 0) return NULL;
-    return new Ray(ray.pos + glm::vec3(t,t,t), this->normal);
+    return new Intersection(this, Ray(ray.pos + glm::vec3(t,t,t), this->normal), t);
 }
