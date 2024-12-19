@@ -145,13 +145,13 @@ vec3 Scene::getColor(const Intersection& hit){
     
     vec3 color = this->ambient.getIntensity() * hit.shape->getKA();
     
-    // if(true){
-    //     for(const Light* light : this->lights){
-    //         if (strcmp(typeid(*light).name(),"9Spotlight") != 0) {
-    //             color += (hit.shape->getKD() * light->diffuse(hit.hit)) ;//+ (hit.shape->getKS() * light->specular(hit.hit, normalize(hit.hit.pos - this->cam.getPos()),hit.shape->getN()));
-    //         } 
-    //     }
-    // }
+    if(true){
+        for(const Light* light : this->lights){
+            if (strcmp(typeid(*light).name(),"9Spotlight") != 0) {
+                color += (hit.shape->getKD() * light->diffuse(hit.hit)) + (hit.shape->getKS() * light->specular(hit.hit, normalize(hit.hit.pos - this->cam.getPos()),hit.shape->getN()));
+            } 
+        }
+    }
 
 
 

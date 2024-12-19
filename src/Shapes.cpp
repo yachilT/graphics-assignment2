@@ -18,7 +18,6 @@ Sphere::~Sphere(){ }
 Intersection* Sphere::CheckIntersection(const Ray& ray){
 
     //std::cout << "Im a sphere with color " << this->getKA().r << ", " << this->getKA().g << ", " << this->getKA().b << " located at " << this->center.x << ", " << this->center.y << ", " << this->center.z << " with radius: " << this->r << std::endl; 
-    glm::vec3 testDir = ray.pos * -6.0f / ray.pos.z; 
     //std::cout << "calculating intersection with ray: " << ray.pos.x << ", " << ray.pos.y << ", " << ray.pos.z << " + " << testDir.x << ", " << testDir.y << ", " << testDir.z << std::endl;
     float a = 1;
     float b = glm::dot(2.0f * ray.dir, ray.pos - this->center);

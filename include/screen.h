@@ -16,7 +16,7 @@ class Screen {
         constexpr static float RAY_CIRCLE_RADIUS = 1; //interpulates between 0 and 1
     public:
         Screen(const int &width, const int &height);
-        const static int RAYS_PER_PIXEL = 4;
+        const static int RAYS_PER_PIXEL = 0;
         deque<Ray> constructRay(const Camera &cam, const int &row, const int &col);
         void setColor(const int &row, const int &col ,vec3 color);
         unsigned char * getImageBuffer();

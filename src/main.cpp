@@ -16,43 +16,44 @@
 
 int main(int argc, char** argv)
 {
-    int width = 100;
-    int height = 100;
+    int width = 1000;
+    int height = 1000;
 
     Screen screen(width, height);
     string path = "res\\scenes\\scene1.txt";
     Reader r(path);
     Scene scene(r);
-    vec3 mainColor;
     vec3 sideColor;
 
 
-    Intersection *inter = scene.findIntersection(Ray(scene.getCamera().getPos(), vec3( -0.7f, -0.7f, -2.0f) - scene.getCamera().getPos() + vec3(.6f, 0, 0)));
+    // Intersection *inter = scene.findIntersection(screen.constructRay(scene.getCamera(), 9, width / 2).at(0));
 
-    if (inter == nullptr) {
-        std::cout << "miss!" << endl;
-    }
-    else {
-        cout << "hit! " << endl;
-    }
+    // if (inter == nullptr) {
+    //     std::cout << "miss!" << endl;
+    // }
+    // else {
+    //     cout << "hit! " << endl;
+    // }
 
     try{
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
+                vec3 mainColor = vec3(0);
                 deque<Ray> rs = screen.constructRay(scene.getCamera(), row, col);
-                std::cout << rs.at(0).dir.x << rs.at(0).dir.y << rs.at(0).dir.z << std::endl;
+                //std::cout << rs.at(0).dir.x << rs.at(0).dir.y << rs.at(0).dir.z << std::endl;
                 Intersection* intersection = scene.findIntersection(rs.at(0));
                 if (intersection != nullptr) {
                     mainColor = scene.getColor(*intersection);
+                    //std::cout << row << ", " << col << std::endl;
                 }
-                else {
-                    mainColor = vec3(0);
-                }
+
                 rs.pop_front();
                 delete intersection;
 
-                if(rs.size() == 0) screen.setColor(row, col, mainColor);
-                else{
+                if(Screen::RAYS_PER_PIXEL == 0) {
+                    screen.setColor(row, col, mainColor);
+                }
+                else {
                     while(rs.size() > 0){
                         intersection = scene.findIntersection(rs.at(0));
                         if (intersection != nullptr)
