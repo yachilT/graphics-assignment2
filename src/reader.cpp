@@ -32,6 +32,8 @@ void Reader::loadLines(const string &path)
     while (getline(file, line)) {
         lines.push_back(proccesLine(line));
     }
+
+    
 }
 
 vector<ReaderLine> Reader::getLines() const{

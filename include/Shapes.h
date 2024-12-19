@@ -6,9 +6,10 @@
 class Shape{
 public:
     virtual Intersection* CheckIntersection(const Ray& ray) = 0;
-    glm::vec3 getKS(){ return k_specular; }
-    glm::vec3 getKD(){ return k_diffuse; }
-    glm::vec3 getKA() {return k_ambient; }
+    const glm::vec3 getKS() const { return k_specular; } 
+    const glm::vec3 getKD() const { return k_diffuse; } 
+    const glm::vec3 getKA() const {return k_ambient; } 
+    const float getN() const { return n; }
 protected:
     glm::vec3 k_diffuse;
     glm::vec3 k_specular;

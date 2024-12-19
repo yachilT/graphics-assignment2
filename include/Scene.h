@@ -9,6 +9,7 @@
 using glm::vec3;
 using std::vector;
 using std::deque;
+using glm::normalize;
 
 class Camera {
     private:
@@ -40,6 +41,4 @@ class Scene {
         const Camera& getCamera();
         Intersection* findIntersection(const Ray &ray);
         vec3 getColor(const Intersection &hit);
-        
-
 };

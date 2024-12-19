@@ -20,6 +20,10 @@ int Screen::m2a(int row, int col)
 {
     return row * width + col;
 }
+vec3 Screen::clipColor(vec3 &color)
+{
+    return vec3(color[0] > 1 ? 1 : color[0], color[1] > 1 ? 1 : color[1], color[2] > 1 ? 1 : color[2]);
+}
 vec2 Screen::pixelToWorldOffset(int row, int col)
 {
     vec2 dims = vec2(width, height);
@@ -62,7 +66,7 @@ deque<Ray> Screen::constructRay(const Camera &cam, const int &row, const int &co
 void Screen::setColor(const int &row, const int &col, vec3 color)
 {
     //std::cout << "setting " << row << ", " << col << " in " << row * width + col << "   " << color[0] << "," << color[1] << ", " << color[2] << std::endl;
-    pixels[m2a(row, col)] = color;
+    pixels[m2a(row, col)] = clipColor(color);
 }
 
 unsigned char *Screen::getImageBuffer()
@@ -79,3 +83,5 @@ unsigned char *Screen::getImageBuffer()
 
     return buffer;
 }
+
+

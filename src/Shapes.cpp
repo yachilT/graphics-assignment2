@@ -57,6 +57,6 @@ Plane::~Plane(){ }
 */
 Intersection* Plane::CheckIntersection(const Ray& ray){
     float t = glm::dot(this->normal, (glm::vec3(0.0f,0.0f,-this->normal.z/this->d) - ray.pos) / glm::dot(this->normal, ray.dir));
-    if(t <= 0) return NULL;
+    if(t <= 0) return nullptr;
     return new Intersection(this, Ray(ray.pos + glm::vec3(t,t,t), this->normal), t);
 }

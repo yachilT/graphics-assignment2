@@ -2,11 +2,14 @@
 #define DIRECTIONAL_LIGHT 0
 #define SPOTLIGHT_LIGHT 1
 #include <iostream>
+#include <Intersection.h>
+#include<typeinfo>
+#include <string.h>
 
 Camera::Camera(vec3 pos, vec3 forward, vec3 up) :
 pos(pos), forward(forward), up(up), right(glm::cross(up, forward)) {};
 
-Camera::Camera(vec3 pos) : Camera::Camera(pos, vec3(0) - pos, vec3(0, 1, 0)) {};
+Camera::Camera(vec3 pos) : Camera::Camera(pos, glm::normalize(vec3(0) - pos), vec3(0, 1, 0)) {};
 
 Camera::Camera() : Camera::Camera(vec3(-1, 0, 0)){};
 
@@ -91,9 +94,26 @@ Scene::Scene(const Reader &reader){
                 
                 obj_pos.pop_front();
                 obj_type.pop_front();
+
             break;
         }
     }
+
+    //TODO!: REMOVE
+    std::cout << "objs" << std::endl;
+    for(int i = 0; i < this->objects.size(); i++){
+    }
+    std::cout << "lights" << std::endl;
+    for(int i = 0; i < this->lights.size(); i++){
+        std::cout << this->lights.at(i)->intensity.x << this->lights.at(i)->intensity.y << this->lights.at(i)->intensity.z << std::endl;
+    }
+    std::cout << "amb" << std::endl;
+    std::cout << this->ambient.getIntensity().x << this->ambient.getIntensity().y << this->ambient.getIntensity().z << std::endl;
+    std::cout << "cam" << std::endl;
+    std::cout << this->cam.getPos().x << this->cam.getPos().y << this->cam.getPos().z << std::endl;
+    std::cout << this->cam.getForward().x << this->cam.getForward().y << this->cam.getForward().z << std::endl;
+    std::cout << this->cam.getRight().x << this->cam.getRight().y << this->cam.getRight().z << std::endl;
+    std::cout << this->cam.getUp().x << this->cam.getUp().y << this->cam.getUp().z << std::endl;
 }
 
 Scene::Scene(Camera cam, vector<Shape*> objects, vector<Light*> lights, Ambient ambient) : 
@@ -104,12 +124,29 @@ const Camera& Scene::getCamera()
 }
 Intersection *Scene::findIntersection(const Ray &ray)
 {
-    float t = -1;
+    Intersection *hit = nullptr;
     Intersection *closestHit = nullptr;
     for (int i = 0; i < objects.size(); i++) {
-        Intersection *hit = objects[i]->CheckIntersection(ray);
-        if (hit != nullptr && (t == -1 || hit->t < t))
-            closestHit = hit;    
+        if (strcmp(typeid(*objects[i]).name(),"5Plane") != 0) {
+            hit = objects[i]->CheckIntersection(ray);
+            if (hit != nullptr && (closestHit == nullptr || hit->t < closestHit->t)) {
+                closestHit = hit;   
+            }
+        } 
     }
     return closestHit;
 };
+
+vec3 Scene::getColor(const Intersection& hit){
+    
+    vec3 color = this->ambient.getIntensity() * hit.shape->getKA();
+    
+    if(true){
+        for(const Light* light : this->lights){
+            
+            color += (hit.shape->getKD() * light->diffuse(hit.hit)) ;//+ (hit.shape->getKS() * light->specular(hit.hit, normalize(hit.hit.pos - this->cam.getPos()),hit.shape->getN()));
+        }
+    }
+
+    return color;
+}

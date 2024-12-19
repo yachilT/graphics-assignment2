@@ -63,7 +63,18 @@
         "xstddef": "cpp",
         "xstring": "cpp",
         "xtr1common": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "intersection.h": "c",
+        "array": "cpp",
+        "*.tcc": "cpp",
+        "cwctype": "cpp",
+        "memory_resource": "cpp",
+        "numeric": "cpp",
+        "random": "cpp",
+        "string_view": "cpp",
+        "numbers": "cpp",
+        "cinttypes": "cpp",
+        "typeindex": "cpp"
     },
     "makefile.makefilePath": "C:\\Users\\tomyl\\Documents\\software_engineering\\semester_5\\Graphics\\Assignment2\\Makefile",
     "makefile.launchConfigurations": [
