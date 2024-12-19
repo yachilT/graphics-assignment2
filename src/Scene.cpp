@@ -90,6 +90,7 @@ Scene::Scene(const Reader &reader){
                 obj_forth.pop_front();
 
                 if(currForth > 0) this->objects.push_back(new Sphere(obj_pos.at(0), currForth, vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), obj_type.at(0), currLine.fs[3]));
+                
                 else this->objects.push_back(new Plane(obj_pos.at(0), currForth, vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), obj_type.at(0), currLine.fs[3]));
                 
                 obj_pos.pop_front();
@@ -126,28 +127,33 @@ Intersection *Scene::findIntersection(const Ray &ray)
 {
     Intersection *hit = nullptr;
     Intersection *closestHit = nullptr;
-    for (int i = 0; i < objects.size(); i++) {
-        if (strcmp(typeid(*objects[i]).name(),"5Plane") != 0) {
-            hit = objects[i]->CheckIntersection(ray);
-            if (hit != nullptr && (closestHit == nullptr || hit->t < closestHit->t)) {
-                closestHit = hit;   
-            }
-        }
-    }
-    return closestHit;
+    // for (int i = 0; i < objects.size(); i++) {
+    //     if (strcmp(typeid(*objects[i]).name(),"5Plane") != 0) {
+    //         hit = objects[i]->CheckIntersection(ray);
+    //         if (hit != nullptr && (closestHit == nullptr || hit->t < closestHit->t)) {
+    //             closestHit = hit;   
+    //         }
+    //     }
+    // }
+
+    return objects[1]->CheckIntersection(ray);
+    //return closestHit;
+
 };
 
 vec3 Scene::getColor(const Intersection& hit){
     
     vec3 color = this->ambient.getIntensity() * hit.shape->getKA();
     
-    if(true){
-        for(const Light* light : this->lights){
-            if (strcmp(typeid(*light).name(),"9Spotlight") != 0) {
-                color += (hit.shape->getKD() * light->diffuse(hit.hit)) ;//+ (hit.shape->getKS() * light->specular(hit.hit, normalize(hit.hit.pos - this->cam.getPos()),hit.shape->getN()));
-            } 
-        }
-    }
+    // if(true){
+    //     for(const Light* light : this->lights){
+    //         if (strcmp(typeid(*light).name(),"9Spotlight") != 0) {
+    //             color += (hit.shape->getKD() * light->diffuse(hit.hit)) ;//+ (hit.shape->getKS() * light->specular(hit.hit, normalize(hit.hit.pos - this->cam.getPos()),hit.shape->getN()));
+    //         } 
+    //     }
+    // }
+
+
 
     return color;
 }

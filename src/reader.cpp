@@ -17,7 +17,8 @@ Reader::Reader(const string &path) : lines()
 ReaderLine Reader::proccesLine(const string &l)
 {
     ReaderLine r;
-    sscanf(l.c_str(), "%c %f %f %f %f", &r.c, r.fs, r.fs + 1, r.fs + 2, r.fs + 3, r.fs + 4);
+    sscanf(l.c_str(), "%c %f %f %f %f", &r.c, r.fs, r.fs + 1, r.fs + 2, r.fs + 3);
+
     return r;
 }
 

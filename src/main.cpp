@@ -16,8 +16,8 @@
 
 int main(int argc, char** argv)
 {
-    int width = 1000;
-    int height = 1000;
+    int width = 100;
+    int height = 100;
 
     Screen screen(width, height);
     string path = "res\\scenes\\scene1.txt";
@@ -26,13 +26,21 @@ int main(int argc, char** argv)
     vec3 mainColor;
     vec3 sideColor;
 
-    //TOM TOM TOM TOM TOM TOM TOM
-    //I changed the makefile path so it wont detect it for you
+
+    Intersection *inter = scene.findIntersection(Ray(scene.getCamera().getPos(), vec3( -0.7f, -0.7f, -2.0f) - scene.getCamera().getPos() + vec3(.6f, 0, 0)));
+
+    if (inter == nullptr) {
+        std::cout << "miss!" << endl;
+    }
+    else {
+        cout << "hit! " << endl;
+    }
 
     try{
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
                 deque<Ray> rs = screen.constructRay(scene.getCamera(), row, col);
+                std::cout << rs.at(0).dir.x << rs.at(0).dir.y << rs.at(0).dir.z << std::endl;
                 Intersection* intersection = scene.findIntersection(rs.at(0));
                 if (intersection != nullptr) {
                     mainColor = scene.getColor(*intersection);
@@ -63,6 +71,7 @@ int main(int argc, char** argv)
 
     unsigned char * b = screen.getImageBuffer();
     stbi_write_png("test.png", width, height, 3, b, width * 3);
+    cout << "wrote image successfully" << endl;
     return 0;
 }
 
