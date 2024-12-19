@@ -26,6 +26,9 @@ int main(int argc, char** argv)
     vec3 mainColor;
     vec3 sideColor;
 
+    //TOM TOM TOM TOM TOM TOM TOM
+    //I changed the makefile path so it wont detect it for you
+
     try{
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {

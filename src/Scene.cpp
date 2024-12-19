@@ -100,20 +100,20 @@ Scene::Scene(const Reader &reader){
     }
 
     //TODO!: REMOVE
-    std::cout << "objs" << std::endl;
-    for(int i = 0; i < this->objects.size(); i++){
-    }
-    std::cout << "lights" << std::endl;
-    for(int i = 0; i < this->lights.size(); i++){
-        std::cout << this->lights.at(i)->intensity.x << this->lights.at(i)->intensity.y << this->lights.at(i)->intensity.z << std::endl;
-    }
-    std::cout << "amb" << std::endl;
-    std::cout << this->ambient.getIntensity().x << this->ambient.getIntensity().y << this->ambient.getIntensity().z << std::endl;
-    std::cout << "cam" << std::endl;
-    std::cout << this->cam.getPos().x << this->cam.getPos().y << this->cam.getPos().z << std::endl;
-    std::cout << this->cam.getForward().x << this->cam.getForward().y << this->cam.getForward().z << std::endl;
-    std::cout << this->cam.getRight().x << this->cam.getRight().y << this->cam.getRight().z << std::endl;
-    std::cout << this->cam.getUp().x << this->cam.getUp().y << this->cam.getUp().z << std::endl;
+    // std::cout << "objs" << std::endl;
+    // for(int i = 0; i < this->objects.size(); i++){
+    // }
+    // std::cout << "lights" << std::endl;
+    // for(int i = 0; i < this->lights.size(); i++){
+    //     std::cout << this->lights.at(i)->intensity.x << this->lights.at(i)->intensity.y << this->lights.at(i)->intensity.z << std::endl;
+    // }
+    // std::cout << "amb" << std::endl;
+    // std::cout << this->ambient.getIntensity().x << this->ambient.getIntensity().y << this->ambient.getIntensity().z << std::endl;
+    // std::cout << "cam" << std::endl;
+    // std::cout << this->cam.getPos().x << this->cam.getPos().y << this->cam.getPos().z << std::endl;
+    // std::cout << this->cam.getForward().x << this->cam.getForward().y << this->cam.getForward().z << std::endl;
+    // std::cout << this->cam.getRight().x << this->cam.getRight().y << this->cam.getRight().z << std::endl;
+    // std::cout << this->cam.getUp().x << this->cam.getUp().y << this->cam.getUp().z << std::endl;
 }
 
 Scene::Scene(Camera cam, vector<Shape*> objects, vector<Light*> lights, Ambient ambient) : 
@@ -132,7 +132,7 @@ Intersection *Scene::findIntersection(const Ray &ray)
             if (hit != nullptr && (closestHit == nullptr || hit->t < closestHit->t)) {
                 closestHit = hit;   
             }
-        } 
+        }
     }
     return closestHit;
 };
@@ -143,8 +143,9 @@ vec3 Scene::getColor(const Intersection& hit){
     
     if(true){
         for(const Light* light : this->lights){
-            
-            color += (hit.shape->getKD() * light->diffuse(hit.hit)) ;//+ (hit.shape->getKS() * light->specular(hit.hit, normalize(hit.hit.pos - this->cam.getPos()),hit.shape->getN()));
+            if (strcmp(typeid(*light).name(),"9Spotlight") != 0) {
+                color += (hit.shape->getKD() * light->diffuse(hit.hit)) ;//+ (hit.shape->getKS() * light->specular(hit.hit, normalize(hit.hit.pos - this->cam.getPos()),hit.shape->getN()));
+            } 
         }
     }
 
