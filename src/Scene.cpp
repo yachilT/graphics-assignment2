@@ -101,4 +101,15 @@ cam(cam), objects(objects), lights(lights), ambient(ambient) {};
 const Camera& Scene::getCamera()
 {
     return this->cam;
+}
+Intersection *Scene::findIntersection(const Ray &ray)
+{
+    float t = -1;
+    Intersection *closestHit = nullptr;
+    for (int i = 0; i < objects.size(); i++) {
+        Intersection *hit = objects[i]->CheckIntersection(ray);
+        if (hit != nullptr && (t == -1 || hit->t < t))
+            closestHit = hit;    
+    }
+    return closestHit;
 };

@@ -1,4 +1,4 @@
-//if you wish to run with makefile extantion, try removinf the 2 defines below.
+//if you wish to run with makefile extantion, try removing the 2 defines below.
 
 // #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
@@ -14,42 +14,43 @@
 
 
 
-int main(int argc, char** argv)
-{
-    int width = 1000;
-    int height = 1000;
+// int main(int argc, char** argv)
+// {
+//     int width = 1000;
+//     int height = 1000;
 
-    Screen screen(width, height);
-    string path = "";
-    Reader r(path);
-    Scene scene(r);
-    vec3 mainColor;
-    vec3 sideColor;
+//     Screen screen(width, height);
+//     string path = "";
+//     Reader r(path);
+//     Scene scene(r);
+//     vec3 mainColor;
+//     vec3 sideColor;
 
-    for (int row = 0; row < height; row++) {
-        for (int col = 0; col < width; col++) {
-            deque<Ray> rs = screen.constructRay(scene.getCamera(), row, col);
-            Intersection* intersection = scene.findIntersection(rs.at(0));
-            mainColor = scene.getColor(intersection);
-            rs.pop_front();
-            delete intersection;
+//     for (int row = 0; row < height; row++) {
+//         for (int col = 0; col < width; col++) {
+//             deque<Ray> rs = screen.constructRay(scene.getCamera(), row, col);
+//             Intersection* intersection = scene.findIntersection(rs.at(0));
+//             mainColor = scene.getColor(*intersection);
+//             rs.pop_front();
+//             delete intersection;
 
-            if(rs.size() == 0) screen.setColor(row, col, mainColor);
-            else{
-                while(rs.size() > 0){
-                    intersection = scene.findIntersection(rs.at(0));
-                    sideColor += scene.getColor(intersection);
-                }
-                screen.setColor(row, col, mainColor + (0.5f/Screen::RAYS_PER_PIXEL)*sideColor);
-            }
-        }
-    }
+//             if(rs.size() == 0) screen.setColor(row, col, mainColor);
+//             else{
+//                 while(rs.size() > 0){
+//                     intersection = scene.findIntersection(rs.at(0));
+//                     sideColor += scene.getColor(*intersection);
+//                     rs.pop_front();
+//                 }
+//                 screen.setColor(row, col, mainColor + (0.5f/Screen::RAYS_PER_PIXEL)*sideColor);
+//             }
+//         }
+//     }
 
     
-    return 0;
-}
+//     return 0;
+// }
 
-int test() {
+int main(int argc, char** argv) {
     int width = 1000;
     int height = 1000;
     Screen s(width, height);
@@ -59,7 +60,7 @@ int test() {
     vec3 orange(247.0f/255, 131.0f/255, 72.0f/255);
 
     Camera cam(vec3(0 ,0, -1), vec3(0, 0, 1), vec3(0, 1, 0));
-    Sphere c(vec3(1, 0, 1), .5f, blue * .7f, blue * .3f, 0, 1);
+    Sphere c(vec3(.5f, 0, 1), .5f, blue * .7f, blue * .3f, 0, 1);
     Sphere c2(vec3(0, 0, 1), .4f, purple * .7f, purple * .3f, 0, 1);
     Sphere c3(vec3(-1, 0, 1), .3f, orange * .7f, orange * .3f, 0, 1);
     vector<Sphere> list;
@@ -67,18 +68,18 @@ int test() {
     list.push_back(c);
     list.push_back(c2);
     list.push_back(c3);
-    Directional l(vec3(1), vec3(0, -1, 1));
+    Directional l(vec3(1), vec3(0, -1, 0));
     for (int row = 0; row < height; row++) {
         for (int col = 0; col < width; col++){
-            vector<Ray> rs = s.constructRay(cam, row, col);
+            deque<Ray> rs = s.constructRay(cam, row, col);
             vec3 finalColor = vec3(0);
 
             for (int k = 0; k < list.size(); k++) {
                 for (int i = 0; i < rs.size(); i++) {
-                    Ray *normal = list[k].CheckIntersection(rs[i]);
+                    Intersection *normal = list[k].CheckIntersection(rs[i]);
 
                     if(normal != nullptr) {
-                        vec3 color = l.diffuse(*normal) * list[k].getKD()+ list[k].getKA();
+                        vec3 color = l.diffuse(normal->hit) * list[k].getKD();//+ list[k].getKA();
                         finalColor += (i == 0 ? .5f * color : .5f / Screen::RAYS_PER_PIXEL * color); 
                     }
                 }
