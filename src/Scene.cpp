@@ -23,6 +23,7 @@ Scene::Scene(const Reader &reader){
     deque<vec3> directional_directions;
     deque<vec3> spotlight_directions;
     deque<vec3> spotlight_pos;
+    deque<float> spotlight_angles;
     deque<float> light_type; //true - directional
     float currType;
 
@@ -55,6 +56,7 @@ Scene::Scene(const Reader &reader){
             break;
             case 'p':
                 spotlight_pos.push_back(vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]));
+                spotlight_angles.push_back(currLine.fs[3]);
             break;
             case 'i':
                 currType = light_type.at(0);
@@ -65,9 +67,10 @@ Scene::Scene(const Reader &reader){
                     directional_directions.pop_front();
                 }
                 else if(currType == SPOTLIGHT_LIGHT){
-                    this->lights.push_back(new Spotlight(vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), spotlight_directions.at(0), spotlight_pos.at(0), currLine.fs[3]));
+                    this->lights.push_back(new Spotlight(vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]), spotlight_directions.at(0), spotlight_pos.at(0), spotlight_angles.at(0)));
                     spotlight_directions.pop_front();
                     spotlight_pos.pop_front();
+                    spotlight_angles.pop_front();
                 }
             break;
             case 'o':
@@ -130,7 +133,7 @@ Intersection *Scene::findIntersection(const Ray &ray)
     for (int i = 0; i < objects.size(); i++) {
         //if (strcmp(typeid(*objects[i]).name(),"5Plane") != 0) {
             hit = objects[i]->CheckIntersection(ray);
-            if (hit != nullptr && (closestHit == nullptr || hit->t < closestHit->t)) {
+            if (hit != nullptr && (closestHit == nullptr ||hit->t < closestHit->t)) {
                 closestHit = hit;   
             }
         //}
@@ -145,8 +148,9 @@ vec3 Scene::getColor(const Intersection& hit){
     vec3 color = this->ambient.getIntensity() * hit.shape->getKA();
     for(const Light* light : this->lights){
 
+        if (this->findIntersection(Ray(hit.hit.pos, light->dirToLight(hit.hit.pos))) == nullptr)
         //std::cout << "(" << hit.shape->getKD(hit.hit).x << ", " << hit.shape->getKD(hit.hit).y << ", " << hit.shape->getKD(hit.hit).z << ") * (" << light->diffuse(hit.hit).x << ", " << light->diffuse(hit.hit).y << ", " << light->diffuse(hit.hit).z << ")" << std::endl;
-        color += (hit.shape->getKD(hit.hit) * light->diffuse(hit.hit));// + (hit.shape->getKS() * light->specular(hit.hit, normalize(this->cam.getPos() - hit.hit.pos), hit.shape->getN()));
+            color += (hit.shape->getKD(hit.hit) * light->diffuse(hit.hit)) + (hit.shape->getKS() * light->specular(hit.hit, normalize(this->cam.getPos() - hit.hit.pos), hit.shape->getN()));
     }
     //std::cout << "(" << color.x << ", " << color.y << ", " << color.z << ")" << std::endl;
     return color;

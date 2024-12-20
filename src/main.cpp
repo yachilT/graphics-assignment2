@@ -25,11 +25,10 @@ int main(int argc, char** argv)
     Scene scene(r);
     vec3 sideColor;
 
-    // int row = height / 2;
-    // int col = width / 2;
-    //Intersection *inter = scene.findIntersection(screen.constructRay(scene.getCamera(), row, col).at(0));
+    // int row = 2;
+    // int col = 5;
+    // Intersection *inter = scene.findIntersection(screen.constructRay(scene.getCamera(), row, col).at(0));
 
-    // Intersection *inter = scene.findIntersection(Ray(scene.getCamera().getPos(), scene.getCamera().getForward()));
 
 
     // if (inter == nullptr) {
@@ -38,9 +37,9 @@ int main(int argc, char** argv)
     // else {
     //     cout << "hit! " << endl;
     //     vec3 color = scene.getColor(*inter);
-    //     cout << "position: (" << inter->hit.pos.x << ", " << inter->hit.pos.y << ", " << inter->hit.pos.z << ")" << endl;
-    //     cout << "color: (" << color.x << ", " << color.y << ", " << color.z << ")" << endl;
-    //     //screen.setColor(row, col, color);
+    //     // cout << "position: (" << inter->hit.pos.x << ", " << inter->hit.pos.y << ", " << inter->hit.pos.z << ")" << endl;
+    //     // cout << "color: (" << color.x << ", " << color.y << ", " << color.z << ")" << endl;
+    //     screen.setColor(row, col, color);
     // }
 
     

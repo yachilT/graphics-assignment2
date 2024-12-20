@@ -19,6 +19,12 @@ class Light {
       @return RGB values of specular intensity
       */
       virtual glm::vec3 specular(const Ray &normal, const glm::vec3 &viewDir, float specularExp) const = 0;
+
+      /*
+      @param p point in 3d space from which the dir to light is calculated
+      @return normalized direction to the light source
+      */
+      virtual glm::vec3 dirToLight(const glm::vec3 &p) const = 0;
       
       const glm::vec3 intensity;
 };
@@ -37,6 +43,7 @@ class Directional: public Light {
       Directional(glm::vec3 intensity, glm::vec3 dir);
       virtual glm::vec3 diffuse(const Ray &normal) const override;
       virtual glm::vec3 specular(const Ray &normal, const glm::vec3 &viewDir, float specularExp) const override;
+      virtual glm::vec3 dirToLight(const glm::vec3 &p) const override;
    protected:
       glm::vec3 dir;
 };
@@ -46,6 +53,7 @@ class Spotlight: public Directional {
       Spotlight(glm::vec3 intensity, glm::vec3 dir, glm::vec3 pos, float cutoffCos);
       glm::vec3 diffuse(const Ray &normal) const override;
       glm::vec3 specular(const Ray &normal, const glm::vec3 &viewDir, float specularExp) const override;
+      glm::vec3 dirToLight(const glm::vec3 &p) const override;
    private:
       glm::vec3 pos;
       float cutoffCos;
