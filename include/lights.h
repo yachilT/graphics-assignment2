@@ -35,8 +35,8 @@ class Ambient {
 class Directional: public Light {
    public:
       Directional(glm::vec3 intensity, glm::vec3 dir);
-      glm::vec3 diffuse(const Ray &normal) const override;
-      glm::vec3 specular(const Ray &normal, const glm::vec3 &viewDir, float specularExp) const override;
+      virtual glm::vec3 diffuse(const Ray &normal) const override;
+      virtual glm::vec3 specular(const Ray &normal, const glm::vec3 &viewDir, float specularExp) const override;
    protected:
       glm::vec3 dir;
 };

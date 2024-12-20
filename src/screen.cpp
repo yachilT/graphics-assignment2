@@ -22,7 +22,11 @@ int Screen::m2a(int row, int col)
 }
 vec3 Screen::clipColor(vec3 &color)
 {
-    return vec3(color[0] > 1 ? 1 : color[0], color[1] > 1 ? 1 : color[1], color[2] > 1 ? 1 : color[2]);
+    if (color[0] > 1 || color[2] > 1 || color[2] > 1) {
+        float maxColor = glm::max(color[2], glm::max(color[0], color[1]));
+        return color * (1.0f / maxColor);
+    }
+    return color;
 }
 vec2 Screen::pixelToWorldOffset(int row, int col)
 {

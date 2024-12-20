@@ -25,15 +25,25 @@ int main(int argc, char** argv)
     Scene scene(r);
     vec3 sideColor;
 
+    // int row = height / 2;
+    // int col = width / 2;
+    //Intersection *inter = scene.findIntersection(screen.constructRay(scene.getCamera(), row, col).at(0));
 
-    // Intersection *inter = scene.findIntersection(screen.constructRay(scene.getCamera(), 9, width / 2).at(0));
+    // Intersection *inter = scene.findIntersection(Ray(scene.getCamera().getPos(), scene.getCamera().getForward()));
+
 
     // if (inter == nullptr) {
     //     std::cout << "miss!" << endl;
     // }
     // else {
     //     cout << "hit! " << endl;
+    //     vec3 color = scene.getColor(*inter);
+    //     cout << "position: (" << inter->hit.pos.x << ", " << inter->hit.pos.y << ", " << inter->hit.pos.z << ")" << endl;
+    //     cout << "color: (" << color.x << ", " << color.y << ", " << color.z << ")" << endl;
+    //     //screen.setColor(row, col, color);
     // }
+
+    
 
     try{
         for (int row = 0; row < height; row++) {
@@ -69,7 +79,6 @@ int main(int argc, char** argv)
     }catch(char const* exc){
         std::cout <<exc << std::endl;
     }
-
     unsigned char * b = screen.getImageBuffer();
     stbi_write_png("test.png", width, height, 3, b, width * 3);
     cout << "wrote image successfully" << endl;
@@ -170,7 +179,7 @@ int main1(int argc, char** argv) {
                     Intersection *normal = list[k].CheckIntersection(rs[0]);
 
                     if(normal != nullptr) {
-                        vec3 color = l.diffuse(normal->hit) * list[k].getKD() + list[k].getKA();
+                        vec3 color = l.diffuse(normal->hit) * list[k].getKD(normal->hit) + list[k].getKA();
                         finalColor += color;
                     }
                 

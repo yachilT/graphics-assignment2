@@ -127,33 +127,30 @@ Intersection *Scene::findIntersection(const Ray &ray)
 {
     Intersection *hit = nullptr;
     Intersection *closestHit = nullptr;
-    // for (int i = 0; i < objects.size(); i++) {
-    //     if (strcmp(typeid(*objects[i]).name(),"5Plane") != 0) {
-    //         hit = objects[i]->CheckIntersection(ray);
-    //         if (hit != nullptr && (closestHit == nullptr || hit->t < closestHit->t)) {
-    //             closestHit = hit;   
-    //         }
-    //     }
-    // }
+    for (int i = 0; i < objects.size(); i++) {
+        //if (strcmp(typeid(*objects[i]).name(),"5Plane") != 0) {
+            hit = objects[i]->CheckIntersection(ray);
+            if (hit != nullptr && (closestHit == nullptr || hit->t < closestHit->t)) {
+                closestHit = hit;   
+            }
+        //}
+    }
 
-    return objects[1]->CheckIntersection(ray);
-    //return closestHit;
+    //return objects[1]->CheckIntersection(ray);
+    return closestHit;
 
 };
 
 vec3 Scene::getColor(const Intersection& hit){
-    
     vec3 color = this->ambient.getIntensity() * hit.shape->getKA();
-    
-    if(true){
-        for(const Light* light : this->lights){
-            if (strcmp(typeid(*light).name(),"9Spotlight") != 0) {
-                color += (hit.shape->getKD() * light->diffuse(hit.hit)) + (hit.shape->getKS() * light->specular(hit.hit, normalize(hit.hit.pos - this->cam.getPos()),hit.shape->getN()));
-            } 
-        }
+    for(const Light* light : this->lights){
+
+        //std::cout << "(" << hit.shape->getKD(hit.hit).x << ", " << hit.shape->getKD(hit.hit).y << ", " << hit.shape->getKD(hit.hit).z << ") * (" << light->diffuse(hit.hit).x << ", " << light->diffuse(hit.hit).y << ", " << light->diffuse(hit.hit).z << ")" << std::endl;
+        color += (hit.shape->getKD(hit.hit) * light->diffuse(hit.hit));// + (hit.shape->getKS() * light->specular(hit.hit, normalize(this->cam.getPos() - hit.hit.pos), hit.shape->getN()));
     }
-
-
-
+    //std::cout << "(" << color.x << ", " << color.y << ", " << color.z << ")" << std::endl;
     return color;
+    
+
+
 }

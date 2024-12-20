@@ -7,7 +7,7 @@ class Shape{
 public:
     virtual Intersection* CheckIntersection(const Ray& ray) = 0;
     const glm::vec3 getKS() const { return k_specular; } 
-    const glm::vec3 getKD() const { return k_diffuse; } 
+    const virtual glm::vec3 getKD(const Ray &hit) const { return k_diffuse; } 
     const glm::vec3 getKA() const {return k_ambient; } 
     const float getN() const { return n; }
 protected:
@@ -39,7 +39,9 @@ class Plane: public Shape{
         Plane(glm::vec3 normal, float d, glm::vec3 kd, glm::vec3 ka, char type, float n);
         ~Plane();
         Intersection* CheckIntersection(const Ray& ray) override;
+        const glm::vec3 getKD(const Ray &hit) const override; 
     protected:
+        const glm::vec3 checkerboardColor(glm::vec3 rgbColor, glm::vec3 hitPoint) const;
         glm::vec3 normal;
         float d;
 };

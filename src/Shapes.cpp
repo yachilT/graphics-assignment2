@@ -3,7 +3,7 @@
 #include <iostream>
 
 Shape::Shape(glm::vec3 ks, glm::vec3 kd, glm::vec3 ka, char type, float n) : k_ambient(ka), k_specular(ks), k_diffuse(kd), n(n), type(type) {};
-Shape::Shape(glm::vec3 kd, glm::vec3 ka, char type, float n) : k_ambient(ka), k_specular(glm::vec3(0.7,0.7,0.7)), k_diffuse(kd), n(n), type(type) {};
+Shape::Shape(glm::vec3 kd, glm::vec3 ka, char type, float n) : k_ambient(ka), k_specular(glm::vec3(0.7f,0.7f,0.7f)), k_diffuse(kd), n(n), type(type) {};
 
 //Sphere
 Sphere::Sphere(float x, float y, float z, float r, glm::vec3 ks, glm::vec3 kd, glm::vec3 ka, char type, float n) : Shape(ks, kd, ka, type, n), r(r), center(glm::vec3(x, y, z)){ };
@@ -57,8 +57,56 @@ Plane::~Plane(){ }
 @param ray The ray to check if it intersetcs with current object
 @return Pointer to the ray representing the normal to the hitpoint if there is one, otherwise NULL
 */
-Intersection* Plane::CheckIntersection(const Ray& ray){
-    float t = glm::dot(this->normal, (glm::vec3(0.0f,0.0f,-this->normal.z/this->d) - ray.pos) / glm::dot(this->normal, ray.dir));
+Intersection* Plane::CheckIntersection(const Ray& ray) {
+    // std::cout << "Im a plane: " << this->normal.x << "x + " << this->normal.y << "y + " << this->normal.z << "z + " << this->d << std::endl;
+    // std::cout << "calculating intersection with (" << ray.pos.x << ", " << ray.pos.y << ", " << ray.pos.z << ") + t(" << ray.dir.x << ", " << ray.dir.y << ", " << ray.dir.z << ")" << std::endl;
+    glm::vec3 Q_0 = glm::vec3(0.0f, 0.0f ,-this->d/this->normal.z);
+    // std::cout << "Q_0: (" << Q_0.x << ", " << Q_0.y << ", " << Q_0.z << ")" << std::endl;
+    // std::cout << "P_0: (" << ray.pos.x << ", " << ray.pos.y << ", " << ray.pos.z << ")" << std::endl;
+    // std::cout << "V: (" << ray.dir.x << ", " << ray.dir.y << ", " << ray.dir.z << ")" << std::endl;
+    // std::cout << "N: (" << this->normal.x << ", " << this->normal.y << ", " << this->normal.z << ")" << std::endl;
+
+    float nv = glm::dot(this->normal, ray.dir);
+    // std::cout << "nv: " << nv << std::endl;
+    // std::cout << "Q_0 - P_0 (" << (Q_0 - ray.pos).x << ", " << (Q_0 - ray.pos).y << ", " << (Q_0 - ray.pos).z << ")" << std::endl;
+    if (nv == 0) return nullptr;
+    float t = glm::dot(this->normal, (Q_0 - ray.pos) / nv);
     if(t <= 0) return nullptr;
-    return new Intersection(this, Ray(ray.pos + glm::vec3(t,t,t), this->normal), t);
+
+    if (nv > 0)
+        return new Intersection(this, Ray(ray.pos + t * ray.dir, -this->normal), t);
+    return new Intersection(this, Ray(ray.pos + t * ray.dir, this->normal), t);
+}
+
+const glm::vec3 Plane::getKD(const Ray &hit) const
+{  
+    //std::cout << "checkerboard" << std::endl;
+    glm::vec3 color = checkerboardColor(this->k_diffuse, hit.pos);
+    //std::cout << "(" << color.x << ", " << color.y << ", " << color.z << ")" << std::endl;
+    return color;
+}
+
+const glm::vec3 Plane::checkerboardColor(glm::vec3 rgbColor, glm::vec3 hitPoint) const {
+    //std::cout << "checking checkerboard" << std::endl;
+    // Checkerboard pattern
+    float scaleParameter = 0.5f;
+    float checkerboard = 0;
+    if (hitPoint.x < 0) {
+        checkerboard += floor((0.5f- hitPoint.x) / scaleParameter);
+    }
+    else {
+        checkerboard += floor(hitPoint.x / scaleParameter);
+    }
+    if (hitPoint.y < 0) {
+        checkerboard += floor((0.5f- hitPoint.y) / scaleParameter);
+    }
+    else {
+        checkerboard += floor(hitPoint.y / scaleParameter);
+    }
+        checkerboard = (checkerboard * 0.5f) - int(checkerboard * 0.5f);
+        checkerboard *= 2;
+    if (checkerboard > 0.5f) {
+        return 0.5f * rgbColor;
+    }
+    return rgbColor;
 }
