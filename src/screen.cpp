@@ -22,7 +22,9 @@ int Screen::m2a(int row, int col)
 }
 vec3 Screen::clipColor(vec3 &color)
 {
-    if (color[0] > 1 || color[2] > 1 || color[2] > 1) {
+    //std::cout << color.g << " > 1 ==" << (color.g > 1) << endl;
+    if (color.x > 1.0f || color.y > 1.0f || color.z > 1.0f) {
+        //std::cout << "clipping..." << std::endl;
         float maxColor = glm::max(color[2], glm::max(color[0], color[1]));
         return color * (1.0f / maxColor);
     }
@@ -69,7 +71,8 @@ deque<Ray> Screen::constructRay(const Camera &cam, const int &row, const int &co
 
 void Screen::setColor(const int &row, const int &col, vec3 color)
 {
-    //std::cout << "setting " << row << ", " << col << " in " << row * width + col << "   " << color[0] << "," << color[1] << ", " << color[2] << std::endl;
+    vec3 clipped = clipColor(color);
+    //std::cout << "setting " << row << ", " << col << " in " << row * width + col << "   " << clipped[0] << "," << clipped[1] << ", " << clipped[2] << std::endl;
     pixels[m2a(row, col)] = clipColor(color);
 }
 

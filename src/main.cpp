@@ -26,18 +26,18 @@ int main(int argc, char** argv)
     vec3 sideColor;
     vec3 mainColor;
 
-    // int row = 21;
-    // int col = 18;
+    // int row = height / 2;
+    // int col = width / 2 - 1;
     // Intersection *inter = scene.findIntersection(screen.constructRay(scene.getCamera(), row, col).at(0));
 
-    // int rad = 5;
+    // int rad = 10;
 
-    // for (int r = row - rad; r < row + rad; r++) {
-    //     for (int c = col - rad; c < col + rad; c++) {
-    //         Intersection *i = scene.findIntersection(screen.constructRay(scene.getCamera(), r, c).at(0));
-    //         screen.setColor(r, c, scene.getColor(*i));
-    //     }
-    // }
+    // // for (int r = row - rad; r < row + rad; r++) {
+    // //     for (int c = col - rad; c < col + rad; c++) {
+    // //         Intersection *i = scene.findIntersection(screen.constructRay(scene.getCamera(), r, c).at(0));
+    // //         screen.setColor(r, c, scene.getColorOneLight(*i));
+    // //     }
+    // // }
 
 
     // if (inter == nullptr) {
@@ -45,10 +45,10 @@ int main(int argc, char** argv)
     // }
     // else {
     //     cout << "hit! " << endl;
-    //     vec3 color = scene.getColor(*inter);
+    //     vec3 color = scene.getColorOneLight(*inter);
     //     cout << "position: (" << inter->hit.pos.x << ", " << inter->hit.pos.y << ", " << inter->hit.pos.z << ")" << endl;
     //     cout << "color: (" << color.x << ", " << color.y << ", " << color.z << ")" << endl;
-    //     screen.setColor(row, col, vec3(0));
+    //     screen.setColor(row, col, color);
     // }
 
     

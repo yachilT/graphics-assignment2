@@ -24,7 +24,7 @@ glm::vec3 Directional::diffuse(const Ray &normal) const {
 glm::vec3 Directional::specular(const Ray &normal, const glm::vec3 &viewDir, float specularExp) const {
     //std::cout << "normal: (" << normal.dir.x << ", " << normal.dir.y << ", " << normal.dir.z << ") with length: " << glm::dot(normal.dir, normal.dir) << std::endl; 
     //std::cout << "light dir: (" << this->dir.x << ", " << this->dir.y << ", " << this->dir.z << ") with length: " << glm::dot(this->dir, this->dir) << std::endl; 
-    glm::vec3 reflective = this->dir + 2 * -glm::dot(this->dir, normal.dir) * normal.dir; //scary..
+    glm::vec3 reflective = -this->dirToLight(normal.pos) + 2 * glm::dot(this->dirToLight(normal.pos), normal.dir) * normal.dir; //scary..
     //std::cout << "reflective: (" << reflective.x << ", " << reflective.y << ", " << reflective.z << ") with length: " << glm::dot(reflective, reflective) << std::endl; 
     return glm::pow(glm::max(.0f, glm::dot(reflective, viewDir)), specularExp) * intensity;
 }
