@@ -158,10 +158,10 @@ vec3 Scene::getColor(const Intersection& hit){
         Ray rayToLight = Ray(hit.hit.pos, light->dirToLight(hit.hit.pos));
         Intersection *inter = this->findIntersection(rayToLight);
         float lightT = light->tFromIntersection(rayToLight);
-        //if (lightT != std::numeric_limits<float>::quiet_NaN() && (inter ==  nullptr || inter->t > lightT)){
+        if (lightT != std::numeric_limits<float>::quiet_NaN() && (inter ==  nullptr || inter->t > lightT)){
             //std::cout << "(" << hit.shape->getKD(hit.hit.pos).x << ", " << hit.shape->getKD(hit.hit.pos).y << ", " << hit.shape->getKD(hit.hit.pos).z << ") * (" << light->diffuse(hit.hit).x << ", " << light->diffuse(hit.hit).y << ", " << light->diffuse(hit.hit).z << ")" << std::endl;
             color += (hit.shape->getKD(hit.hit.pos) * light->diffuse(hit.hit)) + (hit.shape->getKS() * light->specular(hit.hit, normalize(this->cam.getPos() - hit.hit.pos), hit.shape->getN()));
-        //}
+        }
     }
     //std::cout << "(" << color.x << ", " << color.y << ", " << color.z << ")" << std::endl;
     return color;
