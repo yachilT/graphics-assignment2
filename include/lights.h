@@ -4,7 +4,6 @@
 #include <limits>
 #include <Intersection.h>
 
-//TODO: consider specular and diffuse according to formula.
 class Light {
    public:
       Light(glm::vec3 intensity);

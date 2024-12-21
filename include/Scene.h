@@ -39,6 +39,8 @@ class Scene {
         Scene(const Reader &reader);
         Scene(Camera cam, vector<Shape*> objects, vector<Light*> lights, Ambient ambient);
         const Camera& getCamera();
+
+        vec3 getRayColor(const Ray &ray, int callsLeft);
         Intersection* findIntersection(const Ray &ray);
         vec3 getColor(const Intersection &hit);
         vec3 getColorOneLight(const Intersection &hit); //for debugging

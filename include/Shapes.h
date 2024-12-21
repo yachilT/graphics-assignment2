@@ -13,7 +13,8 @@ public:
     const virtual glm::vec3 getKD(const glm::vec3 &hitPos) const { return k_diffuse; } 
     const virtual glm::vec3 getKA(const glm::vec3 &hitPos)  const {return k_ambient;}  
     const float getN() const { return n; }
-
+    const char getType() const {return type;};
+    const Ray reflectRay(const glm::vec3 &incomingHit, const Ray &normal) const;
     virtual void printt() const = 0;
 
 protected:

@@ -20,7 +20,7 @@ int main(int argc, char** argv)
     int height = 1000;
 
     Screen screen(width, height);
-    string path = "res\\scenes\\scene6.txt";
+    string path = "res\\scenes\\scene2.txt";
     Reader r(path);
     Scene scene(r);
     vec3 sideColor;
@@ -53,38 +53,26 @@ int main(int argc, char** argv)
 
     
 
-    try{
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
-                mainColor = vec3(0);
-                sideColor = vec3(0);
-                deque<Ray> rs = screen.constructRay(scene.getCamera(), row, col);
-                //std::cout << rs.at(0).dir.x << rs.at(0).dir.y << rs.at(0).dir.z << std::endl;
-                Intersection* intersection = scene.findIntersection(rs.at(0));
-                if (intersection != nullptr) {
-                    mainColor = scene.getColor(*intersection);
-                    //std::cout << row << ", " << col << std::endl;
-                }
+    for (int row = 0; row < height; row++) {
+        for (int col = 0; col < width; col++) {
+            mainColor = vec3(0);
+            sideColor = vec3(0);
+            deque<Ray> rs = screen.constructRay(scene.getCamera(), row, col);
+            //std::cout << rs.at(0).dir.x << rs.at(0).dir.y << rs.at(0).dir.z << std::endl;
+            mainColor = scene.getRayColor(rs.at(0), 5);
+            rs.pop_front();
 
-                rs.pop_front();
-                delete intersection;
-
-                if(Screen::RAYS_PER_PIXEL == 0) {
-                    screen.setColor(row, col, mainColor);
+            if(Screen::RAYS_PER_PIXEL == 0) {
+                screen.setColor(row, col, mainColor);
+            }
+            else {
+                while(rs.size() > 0){
+                    sideColor += scene.getRayColor(rs.at(0), 5);
+                    rs.pop_front();
                 }
-                else {
-                    while(rs.size() > 0){
-                        intersection = scene.findIntersection(rs.at(0));
-                        if (intersection != nullptr)
-                            sideColor += scene.getColor(*intersection);
-                        rs.pop_front();
-                    }
-                    screen.setColor(row, col, mainColor *.5f + (0.5f/Screen::RAYS_PER_PIXEL)*sideColor);
-                }
+                screen.setColor(row, col, mainColor *.5f + (0.5f/Screen::RAYS_PER_PIXEL)*sideColor);
             }
         }
-    }catch(char const* exc){
-        std::cout <<exc << std::endl;
     }
 
 

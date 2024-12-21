@@ -126,6 +126,26 @@ const Camera& Scene::getCamera()
 {
     return this->cam;
 }
+vec3 Scene::getRayColor(const Ray &ray, int callsLeft)
+{
+    Intersection* hit = this->findIntersection(ray);
+    vec3 color = vec3(0);
+    if (hit != nullptr) {
+        if (callsLeft > 0) { // check about what to do when num of recursive call is 0
+            switch(hit->shape->getType()) {
+                case REFLECTIVE:
+                    color = this->getRayColor(hit->shape->reflectRay(ray.dir, hit->hit), callsLeft - 1);
+                    break;
+                default:
+                    color = this->getColor(*hit);
+                    break;
+            }
+        }
+    }
+
+    delete hit;
+    return color;
+}
 Intersection *Scene::findIntersection(const Ray &ray)
 {
     Intersection *hit = nullptr;
@@ -134,7 +154,7 @@ Intersection *Scene::findIntersection(const Ray &ray)
         //if (strcmp(typeid(*objects[i]).name(),"5Plane") != 0) {
             hit = objects[i]->CheckIntersection(ray);
 
-            if (hit != nullptr && (closestHit == nullptr ||hit->t < closestHit->t)) {
+            if (hit != nullptr && (closestHit == nullptr || hit->t < closestHit->t)) {
                 // if (closestHit != nullptr) {
                 //     std::cout << "old t: " << closestHit->t << " from ";
                 //     std::cout << " pointer: " << closestHit->shape << endl;
@@ -152,7 +172,8 @@ Intersection *Scene::findIntersection(const Ray &ray)
 
 };
 
-vec3 Scene::getColor(const Intersection& hit){
+vec3 Scene::getColor(const Intersection& hit) {
+
     vec3 color = this->ambient.getIntensity() * hit.shape->getKA(hit.hit.pos);
     for(const Light* light : this->lights){
         Ray rayToLight = Ray(hit.hit.pos, light->dirToLight(hit.hit.pos));

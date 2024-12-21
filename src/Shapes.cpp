@@ -3,8 +3,12 @@
 #include <iostream>
 #define T_THRESHOLD 0.01f
 
+
 Shape::Shape(glm::vec3 ks, glm::vec3 kd, glm::vec3 ka, char type, float n) : k_ambient(ka), k_specular(ks), k_diffuse(kd), n(n), type(type) {};
 Shape::Shape(glm::vec3 kd, glm::vec3 ka, char type, float n) : k_ambient(ka), k_specular(glm::vec3(0.7f,0.7f,0.7f)), k_diffuse(kd), n(n), type(type) {};
+const Ray Shape::reflectRay(const glm::vec3 &incomingHit, const Ray &normal) const {
+    return Ray(normal.pos, incomingHit - 2 * glm::dot(incomingHit, normal.dir) * normal.dir);
+}
 
 //Sphere
 Sphere::Sphere(float x, float y, float z, float r, glm::vec3 ks, glm::vec3 kd, glm::vec3 ka, char type, float n) : Shape(ks, kd, ka, type, n), r(r), center(glm::vec3(x, y, z)){ };
@@ -60,7 +64,7 @@ Plane::~Plane(){ }
 */
 Intersection* Plane::CheckIntersection(const Ray& ray) {
     //std::cout << "Im a plane: " << this->normal.x << "x + " << this->normal.y << "y + " << this->normal.z << "z + " << this->d << std::endl;
-    // std::cout << "calculating intersection with (" << ray.pos.x << ", " << ray.pos.y << ", " << ray.pos.z << ") + t(" << ray.dir.x << ", " << ray.dir.y << ", " << ray.dir.z << ")" << std::endl;
+    //std::cout << "calculating intersection with (" << ray.pos.x << ", " << ray.pos.y << ", " << ray.pos.z << ") + t(" << ray.dir.x << ", " << ray.dir.y << ", " << ray.dir.z << ")" << std::endl;
     glm::vec3 Q_0 = glm::vec3(0.0f, 0.0f ,-this->d/this->normal.z);
     // std::cout << "Q_0: (" << Q_0.x << ", " << Q_0.y << ", " << Q_0.z << ")" << std::endl;
     // std::cout << "P_0: (" << ray.pos.x << ", " << ray.pos.y << ", " << ray.pos.z << ")" << std::endl;

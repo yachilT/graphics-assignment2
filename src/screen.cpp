@@ -23,12 +23,14 @@ int Screen::m2a(int row, int col)
 vec3 Screen::clipColor(vec3 &color)
 {
     //std::cout << color.g << " > 1 ==" << (color.g > 1) << endl;
-    if (color.x > 1.0f || color.y > 1.0f || color.z > 1.0f) {
-        //std::cout << "clipping..." << std::endl;
-        float maxColor = glm::max(color[2], glm::max(color[0], color[1]));
-        return color * (1.0f / maxColor);
-    }
-    return color;
+    // if (color.x > 1.0f || color.y > 1.0f || color.z > 1.0f) {
+    //     //std::cout << "clipping..." << std::endl;
+    //     float maxColor = glm::max(color[2], glm::max(color[0], color[1]));
+    //     return color * (1.0f / maxColor);
+    // }
+
+
+    return glm::min(vec3(1), color);
 }
 vec2 Screen::pixelToWorldOffset(int row, int col)
 {
