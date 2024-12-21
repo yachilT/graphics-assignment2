@@ -1,7 +1,7 @@
 #include <Shapes.h>
 #include <glm/glm.hpp>
 #include <iostream>
-#define T_THRESHOLD 0.001f
+#define T_THRESHOLD 0.01f
 
 Shape::Shape(glm::vec3 ks, glm::vec3 kd, glm::vec3 ka, char type, float n) : k_ambient(ka), k_specular(ks), k_diffuse(kd), n(n), type(type) {};
 Shape::Shape(glm::vec3 kd, glm::vec3 ka, char type, float n) : k_ambient(ka), k_specular(glm::vec3(0.7f,0.7f,0.7f)), k_diffuse(kd), n(n), type(type) {};
@@ -59,7 +59,7 @@ Plane::~Plane(){ }
 @return Pointer to the ray representing the normal to the hitpoint if there is one, otherwise NULL
 */
 Intersection* Plane::CheckIntersection(const Ray& ray) {
-    // std::cout << "Im a plane: " << this->normal.x << "x + " << this->normal.y << "y + " << this->normal.z << "z + " << this->d << std::endl;
+    //std::cout << "Im a plane: " << this->normal.x << "x + " << this->normal.y << "y + " << this->normal.z << "z + " << this->d << std::endl;
     // std::cout << "calculating intersection with (" << ray.pos.x << ", " << ray.pos.y << ", " << ray.pos.z << ") + t(" << ray.dir.x << ", " << ray.dir.y << ", " << ray.dir.z << ")" << std::endl;
     glm::vec3 Q_0 = glm::vec3(0.0f, 0.0f ,-this->d/this->normal.z);
     // std::cout << "Q_0: (" << Q_0.x << ", " << Q_0.y << ", " << Q_0.z << ")" << std::endl;
@@ -79,10 +79,18 @@ Intersection* Plane::CheckIntersection(const Ray& ray) {
     return new Intersection(this, Ray(ray.pos + t * ray.dir, this->normal), t);
 }
 
-const glm::vec3 Plane::getKD(const Ray &hit) const
+const glm::vec3 Plane::getKD(const glm::vec3 &hitPos) const
 {  
     //std::cout << "checkerboard" << std::endl;
-    glm::vec3 color = checkerboardColor(this->k_diffuse, hit.pos);
+    glm::vec3 color = checkerboardColor(this->k_diffuse, hitPos);
+    //std::cout << "(" << color.x << ", " << color.y << ", " << color.z << ")" << std::endl;
+    return color;
+}
+
+const glm::vec3 Plane::getKA(const glm::vec3 &hitpos) const
+{  
+    //std::cout << "checkerboard" << std::endl;
+    glm::vec3 color = checkerboardColor(this->k_ambient, hitpos);
     //std::cout << "(" << color.x << ", " << color.y << ", " << color.z << ")" << std::endl;
     return color;
 }

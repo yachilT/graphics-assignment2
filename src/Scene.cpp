@@ -133,7 +133,15 @@ Intersection *Scene::findIntersection(const Ray &ray)
     for (int i = 0; i < objects.size(); i++) {
         //if (strcmp(typeid(*objects[i]).name(),"5Plane") != 0) {
             hit = objects[i]->CheckIntersection(ray);
+
             if (hit != nullptr && (closestHit == nullptr ||hit->t < closestHit->t)) {
+                // if (closestHit != nullptr) {
+                //     std::cout << "old t: " << closestHit->t << " from ";
+                //     std::cout << " pointer: " << closestHit->shape << endl;
+                //     closestHit->shape->printt();
+                //     std::cout << "new t: " << hit->t << " from ";
+                //     hit->shape->printt();
+                // }
                 closestHit = hit;   
             }
         //}
@@ -145,16 +153,25 @@ Intersection *Scene::findIntersection(const Ray &ray)
 };
 
 vec3 Scene::getColor(const Intersection& hit){
-    vec3 color = this->ambient.getIntensity() * hit.shape->getKA();
+    vec3 color = this->ambient.getIntensity() * hit.shape->getKA(hit.hit.pos);
     for(const Light* light : this->lights){
-
-        if (this->findIntersection(Ray(hit.hit.pos, light->dirToLight(hit.hit.pos))) == nullptr)
-        //std::cout << "(" << hit.shape->getKD(hit.hit).x << ", " << hit.shape->getKD(hit.hit).y << ", " << hit.shape->getKD(hit.hit).z << ") * (" << light->diffuse(hit.hit).x << ", " << light->diffuse(hit.hit).y << ", " << light->diffuse(hit.hit).z << ")" << std::endl;
-            color += (hit.shape->getKD(hit.hit) * light->diffuse(hit.hit)) + (hit.shape->getKS() * light->specular(hit.hit, normalize(this->cam.getPos() - hit.hit.pos), hit.shape->getN()));
+        Ray rayToLight = Ray(hit.hit.pos, light->dirToLight(hit.hit.pos));
+        Intersection *inter = this->findIntersection(rayToLight);
+        float lightT = light->tFromIntersection(rayToLight);
+        //if (lightT != std::numeric_limits<float>::quiet_NaN() && (inter ==  nullptr || inter->t > lightT)){
+            //std::cout << "(" << hit.shape->getKD(hit.hit.pos).x << ", " << hit.shape->getKD(hit.hit.pos).y << ", " << hit.shape->getKD(hit.hit.pos).z << ") * (" << light->diffuse(hit.hit).x << ", " << light->diffuse(hit.hit).y << ", " << light->diffuse(hit.hit).z << ")" << std::endl;
+            color += (hit.shape->getKD(hit.hit.pos) * light->diffuse(hit.hit)) + (hit.shape->getKS() * light->specular(hit.hit, normalize(this->cam.getPos() - hit.hit.pos), hit.shape->getN()));
+        //}
     }
     //std::cout << "(" << color.x << ", " << color.y << ", " << color.z << ")" << std::endl;
     return color;
-    
+}
 
-
+vec3 Scene::getColorOneLight(const Intersection& hit){
+    vec3 color = this->ambient.getIntensity() * hit.shape->getKA(hit.hit.pos);
+    vec3 kd = hit.shape->getKD(hit.hit.pos);
+    vec3 Id = lights[0]->diffuse(hit.hit);
+    //std::cout << "(" << kd.x << ", " << kd.y << ", " << kd.z << ") * (" << Id.x << ", " << Id.y << ", " <<Id.z << ")" << std::endl;
+    color += (kd * Id) + (hit.shape->getKS() * lights[0]->specular(hit.hit, normalize(this->cam.getPos() - hit.hit.pos), hit.shape->getN()));
+    return color;
 }

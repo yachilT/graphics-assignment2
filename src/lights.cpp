@@ -14,7 +14,10 @@ glm::vec3 Ambient::getIntensity() { return intensity; };
 Directional::Directional(glm::vec3 intensity, glm::vec3 dir) : Light(intensity), dir(glm::normalize(dir)) {
 };
 glm::vec3 Directional::diffuse(const Ray &normal) const {
-    glm::vec3 dirToLight = -this->dir;
+    glm::vec3 dirToLight = this->dirToLight(normal.pos);
+    // std::cout << "normal: (" << normal.dir.x << ", " << normal.dir.y << ", " << normal.dir.z << ") with length: " << glm::dot(normal.dir, normal.dir) << std::endl; 
+    // std::cout << "light dir: (" << dirToLight.x << ", " << dirToLight.y << ", " << dirToLight.z << ") with length: " << glm::dot(this->dir, this->dir) << std::endl; 
+    // std::cout << "angle between normal and dir to light: " << glm::dot(normal.dir, dirToLight) << std::endl;
     return this->intensity * glm::max(.0f, glm::dot(normal.dir, dirToLight));
     //return this->intensity * glm::abs(glm::dot(normal.dir, dirToLight));
 };
@@ -29,6 +32,11 @@ glm::vec3 Directional::dirToLight(const glm::vec3 &p) const
 {
     return -this->dir;
 };
+
+
+float Directional::tFromIntersection(const Ray& ray) const{
+    return std::numeric_limits<float>::infinity();
+}
 
 //---------------------------------------Spotlight---------------------------------------------
 Spotlight::Spotlight(glm::vec3 intensity, glm::vec3 dir, glm::vec3 pos, float cutoffCos) : 
@@ -62,3 +70,14 @@ glm::vec3 Spotlight::dirToLight(const glm::vec3 &p) const
 {
     return glm::normalize(this->pos - p);
 };
+
+
+float Spotlight::tFromIntersection(const Ray& ray) const {
+    //std::cout << "caclulating t for spotlight ";
+    float tx = (this->pos.x - ray.pos.x)/ray.dir.x;
+    float ty = (this->pos.y - ray.pos.y)/ray.dir.y;
+    float tz = (this->pos.z - ray.pos.z)/ray.dir.z;
+
+    if(tx == ty && ty == tz) return tx;
+    else return std::numeric_limits<float>::quiet_NaN(); 
+}

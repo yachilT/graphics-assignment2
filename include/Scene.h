@@ -41,4 +41,5 @@ class Scene {
         const Camera& getCamera();
         Intersection* findIntersection(const Ray &ray);
         vec3 getColor(const Intersection &hit);
+        vec3 getColorOneLight(const Intersection &hit); //for debugging
 };
