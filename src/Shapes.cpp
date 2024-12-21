@@ -9,6 +9,9 @@ Shape::Shape(glm::vec3 kd, glm::vec3 ka, char type, float n) : k_ambient(ka), k_
 const Ray Shape::reflectRay(const glm::vec3 &incomingHit, const Ray &normal) const {
     return Ray(normal.pos, incomingHit - 2 * glm::dot(incomingHit, normal.dir) * normal.dir);
 }
+const Ray Shape::transferRay(const glm::vec3 &incomingHit, const Ray &normal) const{
+    return normal;
+}
 
 //Sphere
 Sphere::Sphere(float x, float y, float z, float r, glm::vec3 ks, glm::vec3 kd, glm::vec3 ka, char type, float n) : Shape(ks, kd, ka, type, n), r(r), center(glm::vec3(x, y, z)){ };

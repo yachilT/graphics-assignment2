@@ -136,6 +136,8 @@ vec3 Scene::getRayColor(const Ray &ray, int callsLeft)
                 case REFLECTIVE:
                     color = this->getRayColor(hit->shape->reflectRay(ray.dir, hit->hit), callsLeft - 1);
                     break;
+                case TRANSPARENT:
+                    //color = this->getRayColor(this->shape->transferRay(ray.dir, hit->hit), callsLeft - 1);
                 default:
                     color = this->getColor(*hit);
                     break;
