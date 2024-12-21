@@ -74,10 +74,5 @@ glm::vec3 Spotlight::dirToLight(const glm::vec3 &p) const
 
 float Spotlight::tFromIntersection(const Ray& ray) const {
     //std::cout << "caclulating t for spotlight ";
-    float tx = (this->pos.x - ray.pos.x)/ray.dir.x;
-    float ty = (this->pos.y - ray.pos.y)/ray.dir.y;
-    float tz = (this->pos.z - ray.pos.z)/ray.dir.z;
-
-    if(tx == ty && ty == tz) return tx;
-    else return std::numeric_limits<float>::quiet_NaN(); 
+    return glm::length(this->pos - ray.pos);
 }

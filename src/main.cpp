@@ -20,7 +20,7 @@ int main(int argc, char** argv)
     int height = 1000;
 
     Screen screen(width, height);
-    string path = "res\\scenes\\scene3.txt";
+    string path = "res\\scenes\\scene6.txt";
     Reader r(path);
     Scene scene(r);
     vec3 sideColor;
@@ -62,7 +62,7 @@ int main(int argc, char** argv)
                 //std::cout << rs.at(0).dir.x << rs.at(0).dir.y << rs.at(0).dir.z << std::endl;
                 Intersection* intersection = scene.findIntersection(rs.at(0));
                 if (intersection != nullptr) {
-                    mainColor = scene.getColorOneLight(*intersection);
+                    mainColor = scene.getColor(*intersection);
                     //std::cout << row << ", " << col << std::endl;
                 }
 
@@ -76,7 +76,7 @@ int main(int argc, char** argv)
                     while(rs.size() > 0){
                         intersection = scene.findIntersection(rs.at(0));
                         if (intersection != nullptr)
-                            sideColor += scene.getColorOneLight(*intersection);
+                            sideColor += scene.getColor(*intersection);
                         rs.pop_front();
                     }
                     screen.setColor(row, col, mainColor *.5f + (0.5f/Screen::RAYS_PER_PIXEL)*sideColor);
