@@ -81,12 +81,12 @@ Scene::Scene(const Reader &reader){
             case 'r':
                 obj_pos.push_back(vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]));
                 obj_forth.push_back(currLine.fs[3]);
-                obj_type.push_back('r');
+                obj_type.push_back(REFLECTIVE);
             break;
             case 't':
                 obj_pos.push_back(vec3(currLine.fs[0], currLine.fs[1], currLine.fs[2]));
                 obj_forth.push_back(currLine.fs[3]);
-                obj_type.push_back('t');
+                obj_type.push_back(TRANSPARENT);
             break;
             case 'c':
                 currForth = obj_forth.at(0);

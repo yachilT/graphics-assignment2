@@ -2,6 +2,8 @@
 #include <glm/glm.hpp>
 #include "Ray.h"
 #include "Intersection.h"
+#define REFLECTIVE 'r'
+#define TRANSPARENT 't'
 
 class Shape{
 public:

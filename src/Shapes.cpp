@@ -1,6 +1,7 @@
 #include <Shapes.h>
 #include <glm/glm.hpp>
 #include <iostream>
+#define T_THRESHOLD 0.001f
 
 Shape::Shape(glm::vec3 ks, glm::vec3 kd, glm::vec3 ka, char type, float n) : k_ambient(ka), k_specular(ks), k_diffuse(kd), n(n), type(type) {};
 Shape::Shape(glm::vec3 kd, glm::vec3 ka, char type, float n) : k_ambient(ka), k_specular(glm::vec3(0.7f,0.7f,0.7f)), k_diffuse(kd), n(n), type(type) {};
@@ -39,7 +40,7 @@ Intersection* Sphere::CheckIntersection(const Ray& ray){
 
     t = glm::min(tPos, tNeg);
 
-    if (t < 0.01f) return nullptr;
+    if (t < T_THRESHOLD) return nullptr;
 
     glm::vec3 intersectionPoint = ray.pos + t * ray.dir;
 
@@ -71,8 +72,8 @@ Intersection* Plane::CheckIntersection(const Ray& ray) {
     // std::cout << "Q_0 - P_0 (" << (Q_0 - ray.pos).x << ", " << (Q_0 - ray.pos).y << ", " << (Q_0 - ray.pos).z << ")" << std::endl;
     if (nv == 0) return nullptr;
     float t = glm::dot(this->normal, (Q_0 - ray.pos) / nv);
-    if(t <= 0) return nullptr;
-    if (t < 0.01f) return nullptr;
+    if(t < T_THRESHOLD) return nullptr;
+
     if (nv > 0)
         return new Intersection(this, Ray(ray.pos + t * ray.dir, -this->normal), t);
     return new Intersection(this, Ray(ray.pos + t * ray.dir, this->normal), t);
