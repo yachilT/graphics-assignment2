@@ -9,8 +9,26 @@ Shape::Shape(glm::vec3 kd, glm::vec3 ka, char type, float n) : k_ambient(ka), k_
 const Ray Shape::reflectRay(const Intersection &hit) const {
     return Ray(hit.hit.pos, hit.incomingDir - 2 * glm::dot(hit.incomingDir, hit.hit.dir) * hit.hit.dir);
 }
-const Ray Shape::transferRay(const glm::vec3 &incomingHit, const Ray &normal) const{
-    return normal;
+const Ray Shape::transferRayIn(const glm::vec3 &incomingHit, const Ray &normal) const{
+    float ni = 1.0;
+    float nr = 1.5;
+    float thetaI = glm::acos(glm::dot(-incomingHit,normal.dir));
+    float thetaR = glm::asin((ni/nr)*glm::sin(thetaI));
+    glm::vec3 T = ((ni/nr)*glm::cos(thetaI)-glm::cos(thetaR))*normal.dir-(ni/nr)*(-incomingHit);
+    
+    Intersection* outPoint = this->CheckIntersection(Ray(normal.pos, T));
+    if(outPoint == nullptr) std::cout << outPoint << std::endl;
+    return transferRayOut(T, outPoint->hit);
+}
+
+const Ray Shape::transferRayOut(const glm::vec3 &incomingHit, const Ray &normal) const{
+    float ni = 1.5;
+    float nr = 1.0;
+    float thetaI = glm::acos(glm::dot(-incomingHit,-normal.dir));
+    float thetaR = glm::asin((ni/nr)*glm::sin(thetaI));
+    glm::vec3 T = ((ni/nr)*glm::cos(thetaI)-glm::cos(thetaR))*(-normal.dir)-(ni/nr)*(-incomingHit);
+    Ray outRay(normal.pos, T);
+    return outRay;
 }
 
 //Sphere
@@ -23,7 +41,7 @@ Sphere::~Sphere(){ }
 @param ray The ray to check if it intersetcs with current object
 @return Pointer to the ray representing the normal to the hitpoint if there is one, otherwise NULL
 */
-Intersection* Sphere::CheckIntersection(const Ray& ray){
+Intersection* Sphere::CheckIntersection(const Ray& ray) const{
 
     //std::cout << "Im a sphere with color " << this->getKA().r << ", " << this->getKA().g << ", " << this->getKA().b << " located at " << this->center.x << ", " << this->center.y << ", " << this->center.z << " with radius: " << this->r << std::endl; 
     //std::cout << "calculating intersection with ray: " << ray.pos.x << ", " << ray.pos.y << ", " << ray.pos.z << " + " << testDir.x << ", " << testDir.y << ", " << testDir.z << std::endl;
@@ -40,12 +58,13 @@ Intersection* Sphere::CheckIntersection(const Ray& ray){
     float tPos = (-b + glm::sqrt(delta))/ (2*a);
     float tNeg = delta == 0 ? tPos : (-b - glm::sqrt(delta))/ (2*a);
     float t = 0;
+    if(tPos <= T_THRESHOLD) tPos = 0;
+    if(tNeg <= T_THRESHOLD) tNeg = 0;
 
-    if (tPos  <= 0 &&  tNeg <= 0) return nullptr;
-    if (tPos == 0) t = tNeg;
-    if (tNeg == 0) t = tPos;
-
-    t = glm::min(tPos, tNeg);
+    if (tPos <= 0 &&  tNeg <= 0) return nullptr;
+    if (tPos <= 0) t = tNeg;
+    else if (tNeg <= 0) t = tPos;
+    else t = glm::min(tPos, tNeg);
 
     if (t < T_THRESHOLD) return nullptr;
 
@@ -65,7 +84,7 @@ Plane::~Plane(){ }
 @param ray The ray to check if it intersetcs with current object
 @return Pointer to the ray representing the normal to the hitpoint if there is one, otherwise NULL
 */
-Intersection* Plane::CheckIntersection(const Ray& ray) {
+Intersection* Plane::CheckIntersection(const Ray& ray) const{
     //std::cout << "Im a plane: " << this->normal.x << "x + " << this->normal.y << "y + " << this->normal.z << "z + " << this->d << std::endl;
     //std::cout << "calculating intersection with (" << ray.pos.x << ", " << ray.pos.y << ", " << ray.pos.z << ") + t(" << ray.dir.x << ", " << ray.dir.y << ", " << ray.dir.z << ")" << std::endl;
     glm::vec3 Q_0 = glm::vec3(0.0f, 0.0f ,-this->d/this->normal.z);

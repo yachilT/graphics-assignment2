@@ -20,14 +20,17 @@ int main(int argc, char** argv)
     int height = 1000;
 
     Screen screen(width, height);
+
     string path = "res\\scenes\\scene2.txt";
+    string path = "res\\scenes\\scene6.txt";
     Reader r(path);
     Scene scene(r);
     vec3 sideColor;
     vec3 mainColor;
 
-    // int row = 12;
-    // int col = width / 2 + 8;
+    // int row = 351;
+    // int col = 685;
+    // vec3 color = scene.getRayColor(screen.constructRay(scene.getCamera(), row, col).at(0),5);
 
     // int rad = 10;
 
