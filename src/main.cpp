@@ -20,36 +20,29 @@ int main(int argc, char** argv)
     int height = 1000;
 
     Screen screen(width, height);
-    string path = "res\\scenes\\scene4.txt";
+    string path = "res\\scenes\\scene2.txt";
     Reader r(path);
     Scene scene(r);
     vec3 sideColor;
     vec3 mainColor;
 
-    // int row = height / 2;
-    // int col = width / 2 - 1;
-    // Intersection *inter = scene.findIntersection(screen.constructRay(scene.getCamera(), row, col).at(0));
+    // int row = 12;
+    // int col = width / 2 + 8;
 
     // int rad = 10;
 
-    // // for (int r = row - rad; r < row + rad; r++) {
-    // //     for (int c = col - rad; c < col + rad; c++) {
-    // //         Intersection *i = scene.findIntersection(screen.constructRay(scene.getCamera(), r, c).at(0));
-    // //         screen.setColor(r, c, scene.getColorOneLight(*i));
-    // //     }
-    // // }
-
-
-    // if (inter == nullptr) {
-    //     std::cout << "miss!" << endl;
+    // for (int r = row - rad; r < row + rad; r++) {
+    //     for (int c = col - rad; c < col + rad; c++) {
+    //         vec3 color = scene.getRayColor(screen.constructRay(scene.getCamera(), r, c).at(0), 5);
+    //         screen.setColor(r, c, color);
+    //     }
     // }
-    // else {
-    //     cout << "hit! " << endl;
-    //     vec3 color = scene.getColorOneLight(*inter);
-    //     cout << "position: (" << inter->hit.pos.x << ", " << inter->hit.pos.y << ", " << inter->hit.pos.z << ")" << endl;
-    //     cout << "color: (" << color.x << ", " << color.y << ", " << color.z << ")" << endl;
-    //     screen.setColor(row, col, color);
-    // }
+
+    // vec3 color = scene.getRayColor(screen.constructRay(scene.getCamera(), row, col).at(0), 5);
+    // // cout << "position: (" << inter->hit.pos.x << ", " << inter->hit.pos.y << ", " << inter->hit.pos.z << ")" << endl;
+    // // cout << "color: (" << color.x << ", " << color.y << ", " << color.z << ")" << endl;
+    // screen.setColor(row, col, vec3(0));
+    
 
     
 
@@ -70,7 +63,7 @@ int main(int argc, char** argv)
                     sideColor += scene.getRayColor(rs.at(0), 5);
                     rs.pop_front();
                 }
-                screen.setColor(row, col, mainColor *.5f + (0.5f/Screen::RAYS_PER_PIXEL)*sideColor);
+                screen.setColor(row, col, (mainColor + sideColor) * (1.0f / (Screen::RAYS_PER_PIXEL + 1)));
             }
         }
     }
@@ -83,9 +76,9 @@ int main(int argc, char** argv)
 }
 
 
-// int main2(int argc, char** argv) {
-//     int width = 1000;
-//     int height = 1000;
+// int main(int argc, char** argv) {
+//     int width = 100;
+//     int height = 100;
 //     Screen screen(width, height);
 
 //     vec3 blue(0, 0, 1);
@@ -115,37 +108,33 @@ int main(int argc, char** argv)
 
 //     for (int row = 0; row < height; row++) {
 //         for (int col = 0; col < width; col++) {
+//             mainColor = vec3(0);
+//             sideColor = vec3(0);
 //             deque<Ray> rs = screen.constructRay(scene.getCamera(), row, col);
-//             Intersection* intersection = scene.findIntersection(rs.at(0));
-//             if (intersection != nullptr) {
-//                 mainColor += scene.getColor(*intersection);
+
+//             mainColor = scene.getRayColor(rs.at(0), 5);
+//             rs.pop_front();
+
+            
+//             if(Screen::RAYS_PER_PIXEL == 0) {
+//                 screen.setColor(row, col, mainColor);
 //             }
 //             else {
-//                 mainColor = vec3(0);
-//             }
-//             rs.pop_front();
-//             delete intersection;
-//             if(rs.size() == 0) screen.setColor(row, col, mainColor);
-//             else{
 //                 while(rs.size() > 0){
-//                     intersection = scene.findIntersection(rs.at(0));
-//                     if (intersection != nullptr)
-//                         sideColor += scene.getColor(*intersection);
-//                     else {
-//                         sideColor += vec3(0);
-//                     }
+//                     if (sideColor != vec3(0))
+//                         cout << "(" << sideColor.x << ", " << sideColor.y << ", " << sideColor.z << ") ->"; 
+//                     sideColor += scene.getRayColor(rs.at(0), 5);
 //                     rs.pop_front();
 //                 }
-//                 screen.setColor(row, col, mainColor + (0.5f/Screen::RAYS_PER_PIXEL)*sideColor);
+//                 screen.setColor(row, col, mainColor *.5f + (0.5f/Screen::RAYS_PER_PIXEL)*sideColor);
 //             }
 //         }
 //     }
-
 //     unsigned char * b = screen.getImageBuffer();
 //     stbi_write_png("test.png", width, height, 3, b, width * 3);
 
 //     return 0;
-// }
+//}
 
 
 // int main1(int argc, char** argv) {

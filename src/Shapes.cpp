@@ -6,8 +6,8 @@
 
 Shape::Shape(glm::vec3 ks, glm::vec3 kd, glm::vec3 ka, char type, float n) : k_ambient(ka), k_specular(ks), k_diffuse(kd), n(n), type(type) {};
 Shape::Shape(glm::vec3 kd, glm::vec3 ka, char type, float n) : k_ambient(ka), k_specular(glm::vec3(0.7f,0.7f,0.7f)), k_diffuse(kd), n(n), type(type) {};
-const Ray Shape::reflectRay(const glm::vec3 &incomingHit, const Ray &normal) const {
-    return Ray(normal.pos, incomingHit - 2 * glm::dot(incomingHit, normal.dir) * normal.dir);
+const Ray Shape::reflectRay(const Intersection &hit) const {
+    return Ray(hit.hit.pos, hit.incomingDir - 2 * glm::dot(hit.incomingDir, hit.hit.dir) * hit.hit.dir);
 }
 const Ray Shape::transferRay(const glm::vec3 &incomingHit, const Ray &normal) const{
     return normal;
@@ -51,7 +51,7 @@ Intersection* Sphere::CheckIntersection(const Ray& ray){
 
     glm::vec3 intersectionPoint = ray.pos + t * ray.dir;
 
-    return new Intersection(this, Ray(intersectionPoint, glm::normalize(intersectionPoint - this->center)), t);
+    return new Intersection(this, ray.dir, Ray(intersectionPoint, glm::normalize(intersectionPoint - this->center)), t);
 }
 
 
@@ -82,8 +82,8 @@ Intersection* Plane::CheckIntersection(const Ray& ray) {
     if(t < T_THRESHOLD) return nullptr;
 
     if (nv > 0)
-        return new Intersection(this, Ray(ray.pos + t * ray.dir, -this->normal), t);
-    return new Intersection(this, Ray(ray.pos + t * ray.dir, this->normal), t);
+        return new Intersection(this, ray.dir, Ray(ray.pos + t * ray.dir, -this->normal), t);
+    return new Intersection(this, ray.dir, Ray(ray.pos + t * ray.dir, this->normal), t);
 }
 
 const glm::vec3 Plane::getKD(const glm::vec3 &hitPos) const

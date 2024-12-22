@@ -134,7 +134,7 @@ vec3 Scene::getRayColor(const Ray &ray, int callsLeft)
         if (callsLeft > 0) { // check about what to do when num of recursive call is 0
             switch(hit->shape->getType()) {
                 case REFLECTIVE:
-                    color = this->getRayColor(hit->shape->reflectRay(ray.dir, hit->hit), callsLeft - 1);
+                    color = this->getRayColor(hit->shape->reflectRay(*hit), callsLeft - 1);
                     break;
                 case TRANSPARENT:
                     //color = this->getRayColor(this->shape->transferRay(ray.dir, hit->hit), callsLeft - 1);
@@ -148,6 +148,7 @@ vec3 Scene::getRayColor(const Ray &ray, int callsLeft)
     delete hit;
     return color;
 }
+
 Intersection *Scene::findIntersection(const Ray &ray)
 {
     Intersection *hit = nullptr;
@@ -183,7 +184,7 @@ vec3 Scene::getColor(const Intersection& hit) {
         float lightT = light->tFromIntersection(rayToLight);
         if (lightT != std::numeric_limits<float>::quiet_NaN() && (inter ==  nullptr || inter->t > lightT)){
             //std::cout << "(" << hit.shape->getKD(hit.hit.pos).x << ", " << hit.shape->getKD(hit.hit.pos).y << ", " << hit.shape->getKD(hit.hit.pos).z << ") * (" << light->diffuse(hit.hit).x << ", " << light->diffuse(hit.hit).y << ", " << light->diffuse(hit.hit).z << ")" << std::endl;
-            color += (hit.shape->getKD(hit.hit.pos) * light->diffuse(hit.hit)) + (hit.shape->getKS() * light->specular(hit.hit, normalize(this->cam.getPos() - hit.hit.pos), hit.shape->getN()));
+            color += (hit.shape->getKD(hit.hit.pos) * light->diffuse(hit.hit)) + (hit.shape->getKS() * light->specular(hit.hit, -hit.incomingDir, hit.shape->getN()));
         }
     }
     //std::cout << "(" << color.x << ", " << color.y << ", " << color.z << ")" << std::endl;
@@ -192,9 +193,13 @@ vec3 Scene::getColor(const Intersection& hit) {
 
 vec3 Scene::getColorOneLight(const Intersection& hit){
     vec3 color = this->ambient.getIntensity() * hit.shape->getKA(hit.hit.pos);
-    vec3 kd = hit.shape->getKD(hit.hit.pos);
-    vec3 Id = lights[0]->diffuse(hit.hit);
-    //std::cout << "(" << kd.x << ", " << kd.y << ", " << kd.z << ") * (" << Id.x << ", " << Id.y << ", " <<Id.z << ")" << std::endl;
-    color += (kd * Id) + (hit.shape->getKS() * lights[0]->specular(hit.hit, normalize(this->cam.getPos() - hit.hit.pos), hit.shape->getN()));
-    return color;
+     Ray rayToLight = Ray(hit.hit.pos, lights[0]->dirToLight(hit.hit.pos));
+        Intersection *inter = this->findIntersection(rayToLight);
+        float lightT = lights[0]->tFromIntersection(rayToLight);
+        if (lightT != std::numeric_limits<float>::quiet_NaN() && (inter ==  nullptr || inter->t > lightT)){
+            //std::cout << "(" << hit.shape->getKD(hit.hit.pos).x << ", " << hit.shape->getKD(hit.hit.pos).y << ", " << hit.shape->getKD(hit.hit.pos).z << ") * (" << light->diffuse(hit.hit).x << ", " << light->diffuse(hit.hit).y << ", " << light->diffuse(hit.hit).z << ")" << std::endl;
+            color += (hit.shape->getKD(hit.hit.pos) * lights[0]->diffuse(hit.hit)) + (hit.shape->getKS() * lights[0]->specular(hit.hit, -hit.incomingDir, hit.shape->getN()));
+        }
+        return color;
 }
+

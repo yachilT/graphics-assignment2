@@ -52,7 +52,6 @@ deque<Ray> Screen::constructRay(const Camera &cam, const int &row, const int &co
     deque<Ray> rays;
     rays.push_back(Ray(cam.getPos(), dir));
     if (Screen::RAYS_PER_PIXEL > 0) {
-
         vec2 pixelDims = pixelToWorldOffset(row + 1, col + 1) - offset;
         mat3 worldToCam = mat3(cam.getRight(), cam.getUp(), cam.getForward());
         mat3 pixelSizeScale = .5f * mat3(pixelDims[0], 0, 0, pixelDims[1], 0, 0, 0, 0, 0);
