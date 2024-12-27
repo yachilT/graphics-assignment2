@@ -7,7 +7,7 @@ using std::vector;
 using namespace std;
 
 struct ReaderLine
-{
+{   
     char c;
     float fs[4];
     
@@ -16,9 +16,18 @@ struct ReaderLine
 
 class Reader {
     private:
+        /*
+        parsed lines from txt
+        */
         vector<ReaderLine> lines;
-        ReaderLine nextLine;
+        /*
+        Parse the txt file into a vector of Reader lines
+        @param path path of the txt file
+        */
         void loadLines(const string &path);
+        /*
+        convert a string to a ReaderLine, consists of one char and four floats
+        */
         ReaderLine proccesLine(const string &l);
     public:
         Reader(const string &path);

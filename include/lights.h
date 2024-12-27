@@ -12,7 +12,14 @@ class Light {
       @return RGB values of diffusion intensity
       */
       virtual glm::vec3 diffuse(const Ray &normal) const = 0;
-      virtual float tFromIntersection(const Ray& ray) const = 0;
+
+      /*
+      the distance from p to light source.
+      Note: for directional light distance is infinity.
+      @param p 3d position
+      @returns distance from light source
+      */
+      virtual float distanceFromLight(const glm::vec3 &p) const = 0;
 
       /*
       @param normal the normal vector to the hitpoint surface
@@ -46,8 +53,11 @@ class Directional: public Light {
       virtual glm::vec3 diffuse(const Ray &normal) const override;
       virtual glm::vec3 specular(const Ray &normal, const glm::vec3 &viewDir, float specularExp) const override;
       virtual glm::vec3 dirToLight(const glm::vec3 &p) const override;
-      virtual float tFromIntersection(const Ray& ray) const override;
+      virtual float distanceFromLight(const glm::vec3 &p) const override;
    protected:
+      /*
+      direction of the light that hits the scene.
+      */
       glm::vec3 dir;
 };
 
@@ -57,11 +67,22 @@ class Spotlight: public Directional {
       glm::vec3 diffuse(const Ray &normal) const override;
       glm::vec3 specular(const Ray &normal, const glm::vec3 &viewDir, float specularExp) const override;
       glm::vec3 dirToLight(const glm::vec3 &p) const override;
-      virtual float tFromIntersection(const Ray& ray) const override;
+      virtual float distanceFromLight(const glm::vec3 &p) const override;
    private:
+      /*
+      position of spotlight
+      */
       glm::vec3 pos;
+      /*
+      Cosine value of the cutoff angle,
+      calculated from the direction of the light, to furthest dir of light being hit.
+      */
       float cutoffCos;
 
+      /*
+      @param p position to be checked
+      @returns true iff position p is inside the spotlight's beam.
+      */
       bool insideBeam(glm::vec3 p) const;
 };
 

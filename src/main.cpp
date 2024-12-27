@@ -25,8 +25,6 @@ void makeImage(string name) {
     vec3 mainColor;
 
     
-    deque<Ray> rays = screen.constructRay(scene.getCamera(), 0, 0);
-    cout << rays.size() << endl;
     
     for (int row = 0; row < height; row++) {
         for (int col = 0; col < width; col++) {
@@ -42,8 +40,8 @@ void makeImage(string name) {
 
 
     unsigned char * b = screen.getImageBuffer();
-    string imageName = "ours" + name +".png";
-    stbi_write_png(imageName.c_str(), width, height, 3, b, width * 3);
+    string imageName = "ours_" + name +".png";
+    stbi_write_png(imageName.c_str(), width, height, 3, b, width * 3); // images written in bin directory
     cout << "wrote image successfully" << endl;
 }
 
@@ -51,9 +49,9 @@ void makeImage(string name) {
 int main(int argc, char** argv)
 {
     makeImage("scene1");
-//     makeImage("scene2");
-//     makeImage("scene3");
-//     makeImage("scene4");
-//     makeImage("scene5");
-//     makeImage("scene6");
+    makeImage("scene2");
+    makeImage("scene3");
+    makeImage("scene4");
+    makeImage("scene5");
+    makeImage("scene6");
 }
