@@ -20,7 +20,7 @@ int main(int argc, char** argv)
     int height = 1000;
 
     Screen screen(width, height);
-    string path = "res\\scenes\\scene6.txt";
+    string path = "res\\scenes\\scene4.txt";
     Reader r(path);
     Scene scene(r);
     vec3 sideColor;
