@@ -71,6 +71,7 @@ class Plane: public Shape{
         Plane(float a, float b, float c, float d, glm::vec3 ks, glm::vec3 kd, glm::vec3 ka, char type, float n);
         Plane(float a, float b, float c, float d, glm::vec3 kd, glm::vec3 ka, char type, float n);
         Plane(glm::vec3 normal, float d, glm::vec3 kd, glm::vec3 ka, char type, float n);
+        Plane() : Shape(glm::vec3(0), glm::vec3(0), glm::vec3(0), 'o', 0){;}
         ~Plane();
         Intersection* CheckIntersection(const Ray& ray) const override;
         const glm::vec3 getKD(const glm::vec3 &hitPos) const override; 
@@ -88,4 +89,16 @@ class Plane: public Shape{
         float d;
 };
 
+
+class Triangle: public Shape{
+    public:
+        Triangle(glm::vec3 T1, glm::vec3 T2, glm::vec3 T3, glm::vec3 kd, glm::vec3 ka, char type, float n);
+        ~Triangle();
+        Intersection* CheckIntersection(const Ray& ray) const override;
+    protected:
+        glm::vec3 T1;
+        glm::vec3 T2;
+        glm::vec3 T3;
+        Plane tPlane;
+};
 

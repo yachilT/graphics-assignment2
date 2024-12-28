@@ -17,7 +17,7 @@ const Ray Shape::transferRayIn(const glm::vec3 &incomingHit, const Ray &normal) 
     float thetaI = glm::acos(glm::dot(-incomingHit,normal.dir));
     float thetaR = glm::asin((ni/nr)*glm::sin(thetaI));
     glm::vec3 T = ((ni/nr)*glm::cos(thetaI)-glm::cos(thetaR))*normal.dir-(ni/nr)*(-incomingHit);
-    
+
     Intersection* outPoint = this->CheckIntersection(Ray(normal.pos, T));
     if(outPoint == nullptr) std::cout << outPoint << std::endl;
     return transferRayOut(T, outPoint->hit);
@@ -29,6 +29,7 @@ const Ray Shape::transferRayOut(const glm::vec3 &incomingHit, const Ray &normal)
     float thetaI = glm::acos(glm::dot(-incomingHit,-normal.dir));
     float thetaR = glm::asin((ni/nr)*glm::sin(thetaI));
     glm::vec3 T = ((ni/nr)*glm::cos(thetaI)-glm::cos(thetaR))*(-normal.dir)-(ni/nr)*(-incomingHit);
+
     Ray outRay(normal.pos, T);
     return outRay;
 }
@@ -130,4 +131,44 @@ const glm::vec3 Plane::checkerboardColor(glm::vec3 rgbColor, glm::vec3 hitPoint)
         return 0.5f * rgbColor;
     }
     return rgbColor;
+}
+
+//triangle
+Triangle::Triangle(glm::vec3 T1, glm::vec3 T2, glm::vec3 T3, glm::vec3 kd, glm::vec3 ka, char type, float n) : Shape(kd, ka, type, n), T1(T1), T2(T2), T3(T3){
+    glm::vec3 normal = glm::normalize(glm::cross(T2-T1,T3-T1));
+    float d = -glm::dot(normal, T1);
+    this->tPlane = Plane(normal, d, glm::vec3(0), glm::vec3(0), 'o', 1.0);
+}
+Triangle::~Triangle(){ }
+
+Intersection* Triangle::CheckIntersection(const Ray& ray) const {
+    Intersection *P = this->tPlane.CheckIntersection(ray);
+    if(P == nullptr){
+        return P;
+    }
+
+    P = new Intersection(this, P->incomingDir, P->hit, P->t);
+
+    glm::vec3 V1_12 = this->T1 - ray.pos;
+    glm::vec3 V2_12 = this->T2 - ray.pos;
+    glm::vec3 N_12 = glm::normalize(glm::cross(V2_12, V1_12));
+    if(glm::dot((P->hit.pos-ray.pos), N_12) < 0){
+        return nullptr;
+    }
+
+    glm::vec3 V1_13 = this->T1 - ray.pos;
+    glm::vec3 V2_13 = this->T3 - ray.pos;
+    glm::vec3 N_13 = -glm::normalize(glm::cross(V2_13, V1_13));
+    if(glm::dot((P->hit.pos-ray.pos), N_13) < 0){
+        return nullptr;
+    }
+
+    glm::vec3 V1_23 = this->T2 - ray.pos;
+    glm::vec3 V2_23 = this->T3 - ray.pos;
+    glm::vec3 N_23 = glm::normalize(glm::cross(V2_23, V1_23));
+    if(glm::dot((P->hit.pos-ray.pos), N_23) < 0){
+        return nullptr;
+    }
+
+    return P;
 }

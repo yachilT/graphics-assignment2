@@ -46,10 +46,11 @@ void makeImage(string name) {
 
 int main(int argc, char** argv)
 {
-    makeImage("scene1");
-    makeImage("scene2");
-    makeImage("scene3");
-    makeImage("scene4");
-    makeImage("scene5");
-    makeImage("scene6");
+    //makeImage("scene1");
+    //makeImage("scene2");
+    //makeImage("scene3");
+    //makeImage("scene4");
+    //makeImage("scene5");
+    //makeImage("scene6");
+    makeImage("scene7");
 }

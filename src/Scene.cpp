@@ -98,7 +98,11 @@ Scene::Scene(const Reader &reader){
                 
                 obj_pos.pop_front();
                 obj_type.pop_front();
-
+            break;
+            case 'z':
+                vec3 gold = vec3(0.8, 0.8, 0);
+                Triangle* triangle = new Triangle(vec3(0.1,1,-2), vec3(-0.1,1.1,-2),vec3(-0.1,0.9,-2), gold, gold, 'o', 10);
+                this->objects.push_back(triangle);
             break;
         }
     }
