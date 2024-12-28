@@ -102,22 +102,6 @@ Scene::Scene(const Reader &reader){
             break;
         }
     }
-
-    //TODO!: REMOVE
-    // std::cout << "objs" << std::endl;
-    // for(int i = 0; i < this->objects.size(); i++){
-    // }
-    // std::cout << "lights" << std::endl;
-    // for(int i = 0; i < this->lights.size(); i++){
-    //     std::cout << this->lights.at(i)->intensity.x << this->lights.at(i)->intensity.y << this->lights.at(i)->intensity.z << std::endl;
-    // }
-    // std::cout << "amb" << std::endl;
-    // std::cout << this->ambient.getIntensity().x << this->ambient.getIntensity().y << this->ambient.getIntensity().z << std::endl;
-    // std::cout << "cam" << std::endl;
-    // std::cout << this->cam.getPos().x << this->cam.getPos().y << this->cam.getPos().z << std::endl;
-    // std::cout << this->cam.getForward().x << this->cam.getForward().y << this->cam.getForward().z << std::endl;
-    // std::cout << this->cam.getRight().x << this->cam.getRight().y << this->cam.getRight().z << std::endl;
-    // std::cout << this->cam.getUp().x << this->cam.getUp().y << this->cam.getUp().z << std::endl;
 }
 
 Scene::Scene(Camera cam, vector<Shape*> objects, vector<Light*> lights, Ambient ambient) : 
@@ -126,15 +110,17 @@ const Camera& Scene::getCamera()
 {
     return this->cam;
 }
+
+
 vec3 Scene::getRayColor(const Ray &ray, int callsLeft)
 {
     Intersection* hit = this->findIntersection(ray);
     vec3 color = vec3(0);
     if (hit != nullptr) {
-        if (callsLeft > 0) { // check about what to do when num of recursive call is 0
+        if (callsLeft > 0) {
             switch(hit->shape->getType()) {
                 case REFLECTIVE:
-                    color = this->getRayColor(hit->shape->reflectRay(ray.dir, hit->hit), callsLeft - 1);
+                    color = this->getRayColor(hit->shape->reflectRay(*hit), callsLeft - 1);
                     break;
                 case TRANSPARENT:
                     color = this->getRayColor(hit->shape->transferRayIn(ray.dir, hit->hit), callsLeft - 1);
@@ -149,28 +135,18 @@ vec3 Scene::getRayColor(const Ray &ray, int callsLeft)
     delete hit;
     return color;
 }
+
 Intersection *Scene::findIntersection(const Ray &ray)
 {
     Intersection *hit = nullptr;
     Intersection *closestHit = nullptr;
     for (int i = 0; i < objects.size(); i++) {
-        //if (strcmp(typeid(*objects[i]).name(),"5Plane") != 0) {
-            hit = objects[i]->CheckIntersection(ray);
+        hit = objects[i]->CheckIntersection(ray);
 
-            if (hit != nullptr && (closestHit == nullptr || hit->t < closestHit->t)) {
-                // if (closestHit != nullptr) {
-                //     std::cout << "old t: " << closestHit->t << " from ";
-                //     std::cout << " pointer: " << closestHit->shape << endl;
-                //     closestHit->shape->printt();
-                //     std::cout << "new t: " << hit->t << " from ";
-                //     hit->shape->printt();
-                // }
-                closestHit = hit;   
-            }
-        //}
+        if (hit != nullptr && (closestHit == nullptr || hit->t < closestHit->t)) {
+            closestHit = hit;   
+        }
     }
-
-    //return objects[1]->CheckIntersection(ray);
     return closestHit;
 
 };
@@ -178,24 +154,18 @@ Intersection *Scene::findIntersection(const Ray &ray)
 vec3 Scene::getColor(const Intersection& hit) {
 
     vec3 color = this->ambient.getIntensity() * hit.shape->getKA(hit.hit.pos);
-    for(const Light* light : this->lights){
+    for(const Light* light : this->lights) {
+        float lightDist = light->distanceFromLight(hit.hit.pos);
+
+        // distance to nearest object
         Ray rayToLight = Ray(hit.hit.pos, light->dirToLight(hit.hit.pos));
         Intersection *inter = this->findIntersection(rayToLight);
-        float lightT = light->tFromIntersection(rayToLight);
-        if (lightT != std::numeric_limits<float>::quiet_NaN() && (inter ==  nullptr || inter->t > lightT)){
-            //std::cout << "(" << hit.shape->getKD(hit.hit.pos).x << ", " << hit.shape->getKD(hit.hit.pos).y << ", " << hit.shape->getKD(hit.hit.pos).z << ") * (" << light->diffuse(hit.hit).x << ", " << light->diffuse(hit.hit).y << ", " << light->diffuse(hit.hit).z << ")" << std::endl;
-            color += (hit.shape->getKD(hit.hit.pos) * light->diffuse(hit.hit)) + (hit.shape->getKS() * light->specular(hit.hit, normalize(this->cam.getPos() - hit.hit.pos), hit.shape->getN()));
+
+        if (inter ==  nullptr || inter->t > lightDist) {
+            color += (hit.shape->getKD(hit.hit.pos) * light->diffuse(hit.hit)) + (hit.shape->getKS() * light->specular(hit.hit, -hit.incomingDir, hit.shape->getN()));
         }
     }
-    //std::cout << "(" << color.x << ", " << color.y << ", " << color.z << ")" << std::endl;
     return color;
 }
 
-vec3 Scene::getColorOneLight(const Intersection& hit){
-    vec3 color = this->ambient.getIntensity() * hit.shape->getKA(hit.hit.pos);
-    vec3 kd = hit.shape->getKD(hit.hit.pos);
-    vec3 Id = lights[0]->diffuse(hit.hit);
-    //std::cout << "(" << kd.x << ", " << kd.y << ", " << kd.z << ") * (" << Id.x << ", " << Id.y << ", " <<Id.z << ")" << std::endl;
-    color += (kd * Id) + (hit.shape->getKS() * lights[0]->specular(hit.hit, normalize(this->cam.getPos() - hit.hit.pos), hit.shape->getN()));
-    return color;
-}
+

@@ -13,7 +13,6 @@ Reader::Reader(const string &path) : lines()
     this->loadLines(path);
 }
 
-//TODO!: USE SSCANF
 ReaderLine Reader::proccesLine(const string &l)
 {
     ReaderLine r;
