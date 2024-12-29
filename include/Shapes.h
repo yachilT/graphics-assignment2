@@ -75,7 +75,8 @@ class Plane: public Shape{
         ~Plane();
         Intersection* CheckIntersection(const Ray& ray) const override;
         const glm::vec3 getKD(const glm::vec3 &hitPos) const override; 
-        const glm::vec3 getKA(const glm::vec3 &hitPos) const override; 
+        const glm::vec3 getKA(const glm::vec3 &hitPos) const override;
+        const glm::vec3 getNormal() const {return this->normal;}
     protected:
 
         /**

@@ -101,8 +101,13 @@ Scene::Scene(const Reader &reader){
             break;
             case 'z':
                 vec3 gold = vec3(0.8, 0.8, 0);
-                Triangle* triangle = new Triangle(vec3(0.1,1,-2), vec3(-0.1,1.1,-2),vec3(-0.1,0.9,-2), gold, gold, 'o', 10);
-                this->objects.push_back(triangle);
+                float width = 0.1;
+                Triangle* power = new Triangle(vec3(0.25,0.3,-0.2), vec3(0.25-width,0.1,-0.2),vec3(0.25+width,0.1,-0.2), gold, gold, 'o', 10);
+                Triangle* wisdom = new Triangle(vec3(0.25+width,0.1,-0.2), vec3(0.25,-0.1,-0.2),vec3(0.25+2*width,-0.1,-0.2), gold, gold, 'o', 10);
+                Triangle* courage = new Triangle(vec3(0.25-width,0.1,-0.2), vec3(0.25-2*width,-0.1,-0.2),vec3(0.25,-0.1,-0.2), gold, gold, 'o', 10);
+                this->objects.push_back(power);
+                this->objects.push_back(wisdom);
+                this->objects.push_back(courage);
             break;
         }
     }
